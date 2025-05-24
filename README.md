@@ -110,8 +110,8 @@ letting it sort out complete code and manage a wide range of
 components thanks to its large quantity of digital pins,
 analogic, and PWM.
 
-## Servo motor MG90S
-[[![mg90s-micro-servomotor-kompatibel-mit-arduino-154289-2.png](https://i.postimg.cc/LsdqjTkQ/mg90s-micro-servomotor-kompatibel-mit-arduino-154289-2.png)](https://postimg.cc/4Y5NgpSp) [![1-2-4-5-10-20pcs-MG90-S-Micro-Servo-Motor-Metal-Gear-Analog-RC-Servomotor-180-jpg.jpg](https://i.postimg.cc/05tbVxdw/1-2-4-5-10-20pcs-MG90-S-Micro-Servo-Motor-Metal-Gear-Analog-RC-Servomotor-180-jpg.jpg)](https://postimg.cc/SjMSKBPS)](https://cdn11.bigcommerce.com/s-t3eo8vwp22/images/stencil/1500x1500/products/115/2761/Smart_Robot_Servo_Photo_From_Bundle_Shot-noflag__84262.1650574026.png?c=2&imbypass=on)
+## Servo motor REV-41-1097
+[[)](https://cdn11.bigcommerce.com/s-t3eo8vwp22/images/stencil/640w/products/115/2761/Smart_Robot_Servo_Photo_From_Bundle_Shot-noflag__84262.1650574026.png?c=2)
 
 | | | | |
 | --- | --- | --- | --- |
