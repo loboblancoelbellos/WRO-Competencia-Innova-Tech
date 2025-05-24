@@ -16,6 +16,9 @@ Lista detallada de los componentes utilizados:
 - **Módulo Memoria Micro SD Adaptador Arduino Shield SPI**
 - **Sensor de ultrasonido de distancia Arduino HC-SR04 (3 UND)**
 - **Controlador de velocidad PWM motores DC 4.5V-35V 5A 90W**
+**Chasis de referencias de modelado 3D**
+  https://cults3d.com/es/modelo-3d/juegos/voyager-mk1-3d-printed-1-10-offroad-rc-chassis
+  ![Descripción de la imagen]([ruta/de/la/imagen.jpg](https://images.cults3d.com/D5b6zsU1DCL5KWT4iAJDxcdOajg=/516x516/filters:no_upscale():format(webp)/https://fbi.cults3d.com/uploaders/29823717/illustration-file/c92a7044-4c95-44cd-8543-b918c489b7a2/P1030736-1-1.jpg))
 
 ## 🔨 Instalación y Montaje
 Pasos detallados para ensamblar y conectar los componentes:
