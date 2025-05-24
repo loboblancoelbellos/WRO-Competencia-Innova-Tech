@@ -33,6 +33,10 @@ https://www.revrobotics.com/rev-41-1097/
 
 ![descarga](https://github.com/user-attachments/assets/63b1213b-3a6c-4e2e-802f-76436bbadba5)
 
+**Arduino cam OV2076**
+
+![descarga (1)](https://github.com/user-attachments/assets/12fd795a-7a83-4307-b64f-ecd3a42b0802)
+
 
 ## 🔨 Instalación y Montaje
 Pasos detallados para ensamblar y conectar los componentes:
