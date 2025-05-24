@@ -25,9 +25,11 @@ Lista detallada de los componentes utilizados:
 
 **Servo motor Rev robotics REV-41-1097**
 https://www.revrobotics.com/rev-41-1097/
-![P1030627-1-1](https://github.com/user-attachments/assets/49ce39a4-2e07-48a4-8676-ffa5d3a45591)
+![servo motor rev](https://github.com/user-attachments/assets/b42de167-ad23-4dbd-b86a-e949ff78e697)
+
 
 **Arduino Mega 2060**
+
 ![descarga](https://github.com/user-attachments/assets/63b1213b-3a6c-4e2e-802f-76436bbadba5)
 
 
