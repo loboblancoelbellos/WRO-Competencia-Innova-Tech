@@ -1,4 +1,4 @@
-# 🚀 Proyecto de Arduino - [Ledma Tech_MK1![image](https://github.com/user-attachments/assets/14019e8d-d2ca-4b27-aa16-6ea716af14d3)
+argo# 🚀 Proyecto de Arduino - [Ledma Tech_MK1![image](https://github.com/user-attachments/assets/14019e8d-d2ca-4b27-aa16-6ea716af14d3)
 ]
 
 ## 📖 Introducción
@@ -23,6 +23,12 @@ Lista detallada de los componentes utilizados:
 
 ![Imagen1](https://github.com/user-attachments/assets/f2a3010a-b9ae-4fb4-b983-11a7d8c863ec)
 
+**Servo motor Rev robotics REV-41-1097**
+https://www.revrobotics.com/rev-41-1097/
+![P1030627-1-1](https://github.com/user-attachments/assets/49ce39a4-2e07-48a4-8676-ffa5d3a45591)
+
+**Arduino Mega 2060**
+![descarga](https://github.com/user-attachments/assets/63b1213b-3a6c-4e2e-802f-76436bbadba5)
 
 
 ## 🔨 Instalación y Montaje
@@ -36,5 +42,5 @@ Pasos detallados para ensamblar y conectar los componentes:
 _Aquí puedes agregar imágenes para visualizar el montaje y los componentes utilizados._
 
 
-![P1030627-1-1](https://github.com/user-attachments/assets/49ce39a4-2e07-48a4-8676-ffa5d3a45591)
+
 
