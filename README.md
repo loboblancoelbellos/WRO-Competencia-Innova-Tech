@@ -44,7 +44,23 @@ https://www.revrobotics.com/rev-41-1097/
 
 ![descarga (1)](https://github.com/user-attachments/assets/12fd795a-7a83-4307-b64f-ecd3a42b0802)
 
+**Batería de litio 18650**
 
+![batrerias de litio](https://github.com/user-attachments/assets/74d2a0b1-1fb8-4fd4-a26b-50ba482d4100)
+
+**Puente H L293D**
+
+![puente h](https://github.com/user-attachments/assets/74b50415-35cb-41c1-8fc4-b2f70ee2c634)
+
+**Módulo Memoria Micro SD Adaptador Arduino Shield SPI**
+
+![adaptador sd](https://github.com/user-attachments/assets/9da28bd9-b0fc-495d-b1a7-11de1e568101)
+
+ **Sensor de ultrasonido de distancia Arduino HC-SR04 (3 UND)**
+
+![ultrasinico](https://github.com/user-attachments/assets/902c8c8b-0308-4dfd-9ffe-1c58e8a6bf10)
+
+ 
 ## 🔨 Instalación y Montaje
 Pasos detallados para ensamblar y conectar los componentes:
 1. Ensamblar los motores y sensores en el chasis.
