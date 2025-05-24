@@ -9,7 +9,7 @@ Lista detallada de los componentes utilizados:
 - **Chasis de referencias de modelado 3D**
 - **Motor DC 12V 1A**
 - **Servo motor Rev robotics REV-41-1097**
-- **Arduino Mega 2060**
+- **Arduino Mega 2640**
 - **Arduino cam OV2076**
 - **Batería de litio 18650 (7 UND)**
 - **Puente H L293D**
@@ -33,7 +33,7 @@ https://www.revrobotics.com/rev-41-1097/
 
 ![descarga](https://github.com/user-attachments/assets/63b1213b-3a6c-4e2e-802f-76436bbadba5)
 
-**Arduino cam OV2076**
+**Arduino cam OV2640**
 
 ![descarga (1)](https://github.com/user-attachments/assets/12fd795a-7a83-4307-b64f-ecd3a42b0802)
 
