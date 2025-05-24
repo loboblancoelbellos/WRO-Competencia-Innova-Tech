@@ -21,7 +21,7 @@ Lista detallada de los componentes utilizados:
 **Chasis de referencias de modelado 3D**
   https://cults3d.com/es/modelo-3d/juegos/voyager-mk1-3d-printed-1-10-offroad-rc-chassis
 
-![VOYAGER_MK!](qGB76SKBURttNF6XqbtMo.png)
+![Imagen1](https://github.com/user-attachments/assets/f2a3010a-b9ae-4fb4-b983-11a7d8c863ec)
 
 
 
@@ -35,6 +35,6 @@ Pasos detallados para ensamblar y conectar los componentes:
 ## 📷 Imágenes del Proyecto
 _Aquí puedes agregar imágenes para visualizar el montaje y los componentes utilizados._
 
-![Imagen1](https://github.com/user-attachments/assets/f2a3010a-b9ae-4fb4-b983-11a7d8c863ec)
+
 ![P1030627-1-1](https://github.com/user-attachments/assets/49ce39a4-2e07-48a4-8676-ffa5d3a45591)
 
