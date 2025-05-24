@@ -60,16 +60,21 @@ https://www.revrobotics.com/rev-41-1097/
 
 ![ultrasinico](https://github.com/user-attachments/assets/902c8c8b-0308-4dfd-9ffe-1c58e8a6bf10)
 
- 
+**Controlador de velocidad PWM motores DC 4.5V-35V 5A 90W**
+
+![regulador](https://github.com/user-attachments/assets/452a675d-c2d1-484c-8777-c530555d7ff3)
+
+
 ## 🔨 Instalación y Montaje
 Pasos detallados para ensamblar y conectar los componentes:
 1. Ensamblar los motores y sensores en el chasis.
 2. Conectar correctamente los módulos a la placa Arduino Mega 2060.
 3. Configurar la cámara Arduino OV2076.
 4. Cargar el código en la placa y probar el funcionamiento.
+   en proceso
 
 ## 📷 Imágenes del Proyecto
-_Aquí puedes agregar imágenes para visualizar el montaje y los componentes utilizados._
+
 
 
 
