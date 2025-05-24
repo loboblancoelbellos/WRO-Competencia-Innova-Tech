@@ -82,15 +82,15 @@ This report explains the components and parts of the robot built and designed by
 | **Pieces**                              | **Quantity** |
 |-----------------------------------------|--------------|
 | Arduino Mega                            | 1            |
-| Pixy2 Cam                               | 1            |
+| arduino cam  OV2076                     | 1            |
 | Ultrasonic Sensor (HC-SR04)             | 3            |
-| Bridge H L298N                          | 1            |
+| puente H L293D                          | 1            |
 | Pull-up Button                          | 1            |
-| Motor GA37-520 of 320rpm                | 1            |
-| Servo Motor MG90S                       | 1            |
-| NI-MH Battery 12V 3000mAh               | 1            |
-| LM2596 HW-411 Step Down                 | 2            |
-| Switch button                           | 1            |
+| Motor dc 12V 1A                         | 1            |
+| Servo Motor REV-41-1097                 | 1            |
+| Bateria litio 18650 3000mAh             | 7            |
+| •	Controlador  Dc 4.5v-35v 5a 90w       | 1            |
+| boton suiche                            | 1            |
 
 ## Arduino mega
 
@@ -111,7 +111,7 @@ components thanks to its large quantity of digital pins,
 analogic, and PWM.
 
 ## Servo motor MG90S
-[![mg90s-micro-servomotor-kompatibel-mit-arduino-154289-2.png](https://i.postimg.cc/LsdqjTkQ/mg90s-micro-servomotor-kompatibel-mit-arduino-154289-2.png)](https://postimg.cc/4Y5NgpSp) [![1-2-4-5-10-20pcs-MG90-S-Micro-Servo-Motor-Metal-Gear-Analog-RC-Servomotor-180-jpg.jpg](https://i.postimg.cc/05tbVxdw/1-2-4-5-10-20pcs-MG90-S-Micro-Servo-Motor-Metal-Gear-Analog-RC-Servomotor-180-jpg.jpg)](https://postimg.cc/SjMSKBPS)
+[[![mg90s-micro-servomotor-kompatibel-mit-arduino-154289-2.png](https://i.postimg.cc/LsdqjTkQ/mg90s-micro-servomotor-kompatibel-mit-arduino-154289-2.png)](https://postimg.cc/4Y5NgpSp) [![1-2-4-5-10-20pcs-MG90-S-Micro-Servo-Motor-Metal-Gear-Analog-RC-Servomotor-180-jpg.jpg](https://i.postimg.cc/05tbVxdw/1-2-4-5-10-20pcs-MG90-S-Micro-Servo-Motor-Metal-Gear-Analog-RC-Servomotor-180-jpg.jpg)](https://postimg.cc/SjMSKBPS)](https://cdn11.bigcommerce.com/s-t3eo8vwp22/images/stencil/1500x1500/products/115/2761/Smart_Robot_Servo_Photo_From_Bundle_Shot-noflag__84262.1650574026.png?c=2&imbypass=on)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -183,8 +183,8 @@ void turnGrade(int grade) {
 This servomotor is used the whole time to perform the turnings that are required
 during the challenges.
 
-## Bridge H (L293N)
-[![Conexiones-L298-N.png](https://i.postimg.cc/rwJKcztq/Conexiones-L298-N.png)](https://postimg.cc/zyyJFzjQ)
+## Bridge H (L293d)
+[[![Conexiones-L298-N.png](https://i.postimg.cc/rwJKcztq/Conexiones-L298-N.png)](https://postimg.cc/zyyJFzjQ)](https://http2.mlstatic.com/D_NQ_NP_605677-MLV75798022813_042024-O.webp)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -193,14 +193,14 @@ during the challenges.
 
 The L293N acts as an entrepreneur between the Arduino Mega and the motor, translating the instructions into movements. Its power to manage high voltages lets us use motors with nominal voltage, without limiting the controller voltage, which increases the efficiency and potential of the robot.
 
-## Pixy2 cam
-[![pixy-v21-camera-sensor.jpg](https://i.postimg.cc/N04gL7dH/pixy-v21-camera-sensor.jpg)](https://postimg.cc/Jysw2JVr)
+## arduino cam
+[[![pixy-v21-camera-sensor.jpg](https://i.postimg.cc/N04gL7dH/pixy-v21-camera-sensor.jpg)](https://postimg.cc/Jysw2JVr)](https://http2.mlstatic.com/D_NQ_NP_627146-MLV82680770943_022025-O.webp)
 
 | | | | |
 | --- | --- | --- | --- |
-| **Procesador**                  | NXP LPC4330, 204 MHz, dual core | **Imagen sensor**              | Aptina MT9M114, 1296×976       |
+| **Procesador**                  | NXP LPC4330, 204 MHz, dual core | **Imagen sensor**              | Aptina MT9M114, 1600×1200       |
 | **Field of view horizontaL**        | 60°                          | **Field of view vertical**            | 40°                             |
-| **Operating current**                     | 140 mA                       | **Operating voltage**                  | USB (5V) o 6V a 10V            |
+| **Operating current**                     | 60 mA                       | **Operating voltage**                  | USB (5V) o 6V a 10V            |
 | **RAM**                         | 264Kb                        | **Flash**                         | 2Mb                             |
 | **Buses**                       | UART serial, SPI, I2C, USB, digital, analog | **Light**               | 20 lumens approx                |
 
@@ -460,13 +460,6 @@ void backward(byte speed) {
 }
 ```
 
-## LM2596 HW-411 Step down
-[![XL6009-Module-Pinout.jpg](https://i.postimg.cc/Vv6fMrJk/XL6009-Module-Pinout.jpg)](https://postimg.cc/LYcFFskc)
-
-| | | | |
-| --- | --- | --- | --- |
-| **Input**                   | 4.5-40VDC                   | **Output**                   | 1.5-35VDC                     |
-| **Rated Current**           | 2A (Surge 3A)               | **Regulation**               | 0.5%                          |
 
 To protect the robot`s electronic components from
 possible damages caused by higher voltages that are not
