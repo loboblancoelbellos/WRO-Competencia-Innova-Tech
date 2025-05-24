@@ -2,7 +2,11 @@ argo# 🚀 Proyecto de Arduino - [Ledma Tech_MK1![image](https://github.com/user
 ]
 
 ## 📖 Introducción
-Breve descripción del proyecto, su propósito y qué problema soluciona.
+carrito autonomo controladom por arduino mega que tiene que realizar varios funciones complejas como la deteccion de colores y esquivar 
+obstaculos ademas para pasar las pruebas es un prototipo hecho para la clasificacionde la WRO en el que se realizaran
+diferentes pruebas para poder clasificar 
+este carro se lleva cabo en una fundacion pra poder aprender y mejorar nuestros conocimientos de robotica y compresion der la misma 
+
 
 ## 🔧 Materiales y Componentes
 Lista detallada de los componentes utilizados:
