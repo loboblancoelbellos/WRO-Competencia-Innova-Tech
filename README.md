@@ -74,7 +74,8 @@ Pasos detallados para ensamblar y conectar los componentes:
 2. Conectar correctamente los módulos a la placa Arduino Mega 2060.
 3. Configurar la cámara Arduino OV2076.
 4. Cargar el código en la placa y probar el funcionamiento.
-   en proceso
+5. codigo del carrito (avance del codigoabsuelto a cambios)
+
 
 ## 📷 Imágenes del Proyecto
 
