@@ -23,6 +23,13 @@ Lista detallada de los componentes utilizados:
 
 ![Imagen1](https://github.com/user-attachments/assets/f2a3010a-b9ae-4fb4-b983-11a7d8c863ec)
 
+**archivos de impresion de chasis fotos de la impresion**
+
+![Imagen de WhatsApp 2025-05-20 a las 09 24 45_103739bd](https://github.com/user-attachments/assets/cd348690-413e-4cba-aaee-bd8124d99b3c)
+
+![Imagen de WhatsApp 2025-05-17 a las 11 36 43_54ba59b0](https://github.com/user-attachments/assets/eca676e0-80c4-478e-9d03-1438da985e14)
+
+
 **Servo motor Rev robotics REV-41-1097**
 https://www.revrobotics.com/rev-41-1097/
 
