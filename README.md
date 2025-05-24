@@ -24,6 +24,7 @@ Lista detallada de los componentes utilizados:
 ![VOYAGER_MK!](qGB76SKBURttNF6XqbtMo.png)
 
 
+
 ## 🔨 Instalación y Montaje
 Pasos detallados para ensamblar y conectar los componentes:
 1. Ensamblar los motores y sensores en el chasis.
