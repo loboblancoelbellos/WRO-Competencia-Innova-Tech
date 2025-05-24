@@ -1,5 +1,4 @@
-argo# 🚀 Proyecto de Arduino - [Ledma Tech_MK1![image](https://github.com/user-attachments/assets/14019e8d-d2ca-4b27-aa16-6ea716af14d3)
-]
+argo# 🚀 Proyecto de Arduino - [Ledma Tech_MK1!]
 
 ## 📖 Introducción
 carrito autonomo controladom por arduino mega que tiene que realizar varios funciones complejas como la deteccion de colores y esquivar 
