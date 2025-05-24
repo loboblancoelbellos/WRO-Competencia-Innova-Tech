@@ -56,7 +56,7 @@ https://www.revrobotics.com/rev-41-1097/
 
 ![adaptador sd](https://github.com/user-attachments/assets/9da28bd9-b0fc-495d-b1a7-11de1e568101)
 
- **Sensor de ultrasonido de distancia Arduino HC-SR04 (3 UND)**
+ **Sensor de ultrasonido de distancia Arduino HC-SR04**
 
 ![ultrasinico](https://github.com/user-attachments/assets/902c8c8b-0308-4dfd-9ffe-1c58e8a6bf10)
 
