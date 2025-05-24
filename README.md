@@ -38,3 +38,4 @@ _Aquí puedes agregar imágenes para visualizar el montaje y los componentes uti
 ```markdown
 ![Vista frontal del proyecto](ruta/de/la/imagen1.jpg)
 ![Conexión de la batería](ruta/de/la/imagen2.jpg)
+![Imagen1](https://github.com/user-attachments/assets/526ec463-ac7c-4f1a-973f-300c005d5ffd)
