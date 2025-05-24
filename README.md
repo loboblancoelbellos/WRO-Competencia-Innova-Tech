@@ -25,6 +25,7 @@ Lista detallada de los componentes utilizados:
 
 **Servo motor Rev robotics REV-41-1097**
 https://www.revrobotics.com/rev-41-1097/
+
 ![servo motor rev](https://github.com/user-attachments/assets/b42de167-ad23-4dbd-b86a-e949ff78e697)
 
 
