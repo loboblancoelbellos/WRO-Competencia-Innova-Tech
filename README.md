@@ -1,4 +1,4 @@
- 🚀 Proyecto de Arduino - [Ledma Tech_MK1!]
+🚀 Proyecto de Arduino - [Ledma Tech_MK1!]
 
 ## 📖 Introducción
 carrito autonomo controladom por arduino mega que tiene que realizar varios funciones complejas como la deteccion de colores y esquivar 
@@ -82,6 +82,7 @@ Pasos detallados para ensamblar y conectar los componentes:
 ## 📷 Imágenes del Proyecto
 
 
+![Chasis-RC-02](https://github.com/user-attachments/assets/9e7c69a4-fcab-4fcb-8af9-bcbd09175e0b)
 
 
 
