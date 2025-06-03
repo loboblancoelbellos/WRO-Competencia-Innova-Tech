@@ -89,3 +89,5 @@ Pasos detallados para ensamblar y conectar los componentes:
 
 
 ![sensor de color ](https://github.com/user-attachments/assets/ad0d0900-5da0-4351-b7b1-c4a1550e4126)
+
+![REV-31-1302-12VSlimBattery-New-FINAL__87390](https://github.com/user-attachments/assets/818ae4ad-ad36-4a03-97f1-aa0ec1d8b731)
