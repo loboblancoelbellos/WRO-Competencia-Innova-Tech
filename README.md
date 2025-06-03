@@ -86,8 +86,6 @@ Pasos detallados para ensamblar y conectar los componentes:
 
 
 
-![Chassis](https://github.com/user-attachments/assets/6bf05113-8bdb-4233-ba80-433d376cf81b)
-
-![Guias-Montaje-RC-Explode](https://github.com/user-attachments/assets/cdf3ded4-9409-448f-ad2e-d68f01013f69)
 
 
+![sensor de color ](https://github.com/user-attachments/assets/ad0d0900-5da0-4351-b7b1-c4a1550e4126)
