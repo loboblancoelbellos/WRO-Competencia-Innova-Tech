@@ -85,4 +85,9 @@ Pasos detallados para ensamblar y conectar los componentes:
 
 
 
-![Imagen de WhatsApp 2025-05-09 a las 15 36 09_50ef62d2](https://github.com/user-attachments/assets/15973cbd-da89-4e19-a673-397c43b5946d)
+
+![Chassis](https://github.com/user-attachments/assets/6bf05113-8bdb-4233-ba80-433d376cf81b)
+
+![Guias-Montaje-RC-Explode](https://github.com/user-attachments/assets/cdf3ded4-9409-448f-ad2e-d68f01013f69)
+
+
