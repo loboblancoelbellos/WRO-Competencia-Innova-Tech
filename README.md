@@ -82,7 +82,7 @@ Pasos detallados para ensamblar y conectar los componentes:
 ## 📷 Imágenes del Proyecto
 
 
-![Chasis-RC-02](https://github.com/user-attachments/assets/9e7c69a4-fcab-4fcb-8af9-bcbd09175e0b)
 
 
 
+![Imagen de WhatsApp 2025-05-09 a las 15 36 09_50ef62d2](https://github.com/user-attachments/assets/15973cbd-da89-4e19-a673-397c43b5946d)
