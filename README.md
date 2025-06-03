@@ -1,10 +1,49 @@
-🚀 Proyecto de Arduino - [Ledma Tech_MK1!]
+## 🚀 Documentacion de ingenieria - Innova Tech
+
+Este repositorio contiene todos los materiales necesarios para crear a "Ledma Tech_MK1", el robot autónomo creado por el equipo "Innova Tech", que participará en la categoría Futuros ingeniero en la Clasificaion de la World Robot Olympiad en la temporada 2025.
+
+##  Contenido 
+
+- Miembros del equipo 
+- introduccion 
+- diseño adaptado 
+-  Materiales y Componentes
+
 
 ## 📖 Introducción
 carrito autonomo controladom por arduino mega que tiene que realizar varios funciones complejas como la deteccion de colores y esquivar 
 obstaculos ademas para pasar las pruebas es un prototipo hecho para la clasificacionde la WRO en el que se realizaran
 diferentes pruebas para poder clasificar 
 este carro se lleva cabo en una fundacion pra poder aprender y mejorar nuestros conocimientos de robotica y compresion der la misma 
+
+## Miembros del equipo 
+-Leontino Jose Medina Di Donato
+
+-Adriana Palmar 
+
+-Dharma Alexandra Peña Jiménez
+
+![Imagen de WhatsApp 2025-05-09 a las 15 36 09_50ef62d2](https://github.com/user-attachments/assets/15973cbd-da89-4e19-a673-397c43b5946d)
+
+**Chasis de referencias de modelado 3D**
+ https://cults3d.com/es/modelo-3d/juegos/casis-1-10-adaptable
+
+![Chasis-RC-02](https://github.com/user-attachments/assets/9e7c69a4-fcab-4fcb-8af9-bcbd09175e0b)
+
+### **imagenes de fusion 360**
+
+![Chassis](https://github.com/user-attachments/assets/6bf05113-8bdb-4233-ba80-433d376cf81b)
+
+![Guias-Montaje-RC-Explode](https://github.com/user-attachments/assets/cdf3ded4-9409-448f-ad2e-d68f01013f69)
+
+
+## **guia de armado de chasis**
+esta es la guia de armado por si quieren ir a bajar el diseño 3d y realizar el carrito ya sea pra sus proyectos o por diversion 
+
+https://dukedoks.com/portfolio/guia-chasis-rc/
+
+### **archivos de impresion de chasis fotos de la impresion**
+
 
 
 ## 🔧 Materiales y Componentes
@@ -20,21 +59,8 @@ Lista detallada de los componentes utilizados:
 - **Sensor de ultrasonido de distancia Arduino HC-SR04 (3 UND)**
 - **Controlador de velocidad PWM motores DC 4.5V-35V 5A 90W**
 
-
-**Chasis de referencias de modelado 3D**
-  https://cults3d.com/es/modelo-3d/juegos/voyager-mk1-3d-printed-1-10-offroad-rc-chassis
-
-![Imagen1](https://github.com/user-attachments/assets/f2a3010a-b9ae-4fb4-b983-11a7d8c863ec)
-
-**archivos de impresion de chasis fotos de la impresion**
-
-![Imagen de WhatsApp 2025-05-20 a las 09 24 45_103739bd](https://github.com/user-attachments/assets/cd348690-413e-4cba-aaee-bd8124d99b3c)
-
-![Imagen de WhatsApp 2025-05-17 a las 11 36 43_54ba59b0](https://github.com/user-attachments/assets/eca676e0-80c4-478e-9d03-1438da985e14)
-
-
 **Servo motor Rev robotics REV-41-1097**
-https://www.revrobotics.com/rev-41-1097/
+
 
 ![servo motor rev](https://github.com/user-attachments/assets/b42de167-ad23-4dbd-b86a-e949ff78e697)
 
@@ -43,56 +69,40 @@ https://www.revrobotics.com/rev-41-1097/
 
 ![descarga](https://github.com/user-attachments/assets/63b1213b-3a6c-4e2e-802f-76436bbadba5)
 
-**Arduino cam OV2640**
+**sensor der color TCS3200**
 
-![descarga (1)](https://github.com/user-attachments/assets/12fd795a-7a83-4307-b64f-ecd3a42b0802)
+![sensor de color ](https://github.com/user-attachments/assets/ad0d0900-5da0-4351-b7b1-c4a1550e4126)
 
-**Batería de litio 18650**
+**12V Slim Battery**
 
-![batrerias de litio](https://github.com/user-attachments/assets/74d2a0b1-1fb8-4fd4-a26b-50ba482d4100)
+![REV-31-1302-12VSlimBattery-New-FINAL__87390](https://github.com/user-attachments/assets/818ae4ad-ad36-4a03-97f1-aa0ec1d8b731)
 
-**Puente H L293D**
+**Puente H L298N**
 
-![puente h](https://github.com/user-attachments/assets/74b50415-35cb-41c1-8fc4-b2f70ee2c634)
-
-**Módulo Memoria Micro SD Adaptador Arduino Shield SPI**
-
-![adaptador sd](https://github.com/user-attachments/assets/9da28bd9-b0fc-495d-b1a7-11de1e568101)
+[![puente h](https://electromer.com.py/wp-content/uploads/2021/05/Driver-L298N.jpg "puente h")](http://https://electromer.com.py/wp-content/uploads/2021/05/Driver-L298N.jpg "puente h")
 
  **Sensor de ultrasonido de distancia Arduino HC-SR04**
 
 ![ultrasinico](https://github.com/user-attachments/assets/902c8c8b-0308-4dfd-9ffe-1c58e8a6bf10)
+ 
+**suiche de 1 pase** 
 
-**Controlador de velocidad PWM motores DC 4.5V-35V 5A 90W**
-
-![regulador](https://github.com/user-attachments/assets/452a675d-c2d1-484c-8777-c530555d7ff3)
-
+[![suiche](https://sumador.com/cdn/shop/products/Suichetipobalancinde2pines2.jpg?v=1588622314 "suiche")](http://https://sumador.com/cdn/shop/products/Suichetipobalancinde2pines2.jpg?v=1588622314 "suiche")
 
 ## 🔨 Instalación y Montaje
 Pasos detallados para ensamblar y conectar los componentes:
-1. Ensamblar los motores y sensores en el chasis.
-2. Conectar correctamente los módulos a la placa Arduino Mega 2060.
-3. Configurar la cámara Arduino OV2076.
-4. Cargar el código en la placa y probar el funcionamiento.
+
+1.diagrama de instalacion de cables 
+
+![Imagen de WhatsApp 2025-06-03 a las 11 18 23_69784173](https://github.com/user-attachments/assets/eab9610e-60d6-47f5-8467-b4cff3e96427)
+
+2.Ensamblar los motores y sensores en el chasis.
+3. Conectar correctamente los módulos a la placa Arduino Mega 2060.
+4. Configurar la cámara Arduino OV2076.
+5. Cargar el código en la placa y probar el funcionamiento.
    
-5. codigo del carrito (avance del codigoabsuelto a cambios)
+. codigo del carrito (avance del codigoabsuelto a cambios)
 
 
 
 ## 📷 Imágenes del Proyecto
-
-
-
-
-
-
-
-
-![sensor de color ](https://github.com/user-attachments/assets/ad0d0900-5da0-4351-b7b1-c4a1550e4126)
-
-![REV-31-1302-12VSlimBattery-New-FINAL__87390](https://github.com/user-attachments/assets/818ae4ad-ad36-4a03-97f1-aa0ec1d8b731)
-
-
-
-
-![Imagen de WhatsApp 2025-06-03 a las 11 18 23_69784173](https://github.com/user-attachments/assets/eab9610e-60d6-47f5-8467-b4cff3e96427)
