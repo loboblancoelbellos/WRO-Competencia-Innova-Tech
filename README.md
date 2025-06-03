@@ -11,10 +11,7 @@ Este repositorio contiene todos los materiales necesarios para crear a "Ledma Te
 
 
 ## 📖 Introducción
-carrito autonomo controladom por arduino mega que tiene que realizar varios funciones complejas como la deteccion de colores y esquivar 
-obstaculos ademas para pasar las pruebas es un prototipo hecho para la clasificacionde la WRO en el que se realizaran
-diferentes pruebas para poder clasificar 
-este carro se lleva cabo en una fundacion pra poder aprender y mejorar nuestros conocimientos de robotica y compresion der la misma 
+A continuacion veremos e arduo proceso seleccion y armado del carrito con el esfuerzo que tuvimos que realizar paraq poder realizar uno de los mejores robots. fue un arduo trabajo y un camino dificil mas con el tiempo en contra, y un camino largo para poder adaptar a un diseño nuestro robot u que sea completamente autonomo, aprender a programar, mecanica fue de gran ayuda. despues de haber reflexionado y analizado hemos realizado una estrategia basandonos en el diseño, los parametros y los componentes que teniamos, convencidos y seguros que debe tener unos de los mejores rendimientos para la WRO
 
 ## Miembros del equipo 
 -Leontino Jose Medina Di Donato
