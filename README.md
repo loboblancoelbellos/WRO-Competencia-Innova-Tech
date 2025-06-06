@@ -103,3 +103,9 @@ Pasos detallados para ensamblar y conectar los componentes:
 
 
 ## 📷 Imágenes del Proyecto
+
+
+
+![58d167db-6610-429a-9669-5d3e44a8bdb6](https://github.com/user-attachments/assets/43a830bd-0473-43b1-a4c9-bbeb139ec016)
+![0a149010-3445-4fbe-92ab-164ff8143b47](https://github.com/user-attachments/assets/7f2d57ec-28e8-406a-b306-d1da54f44467)
+![1932eebd-bdf0-4ddc-949f-896a84cf9201](https://github.com/user-attachments/assets/3ea8a2ea-8c3c-4cf5-b728-1cdf928101bc)
