@@ -16,7 +16,7 @@ En este repositorio se observará un arduo proceso tanto de selección, así com
 ## Miembros del equipo 
 -Leontino Jose Medina Di Donato
 
--Adriana Palmar 
+-Adriana Carolina Palmar Molero
 
 -Dharma Alexandra Peña Jiménez
 
@@ -109,6 +109,297 @@ Pasos de montaje mecánico y electrico de los componentes:
    
 Codigo en Arduino IDE (codigo absuelto a cambios)
 
+###Code Blocks (multi-language) & highlighting
+
+####Inline code
+
+`#include <Servo.h>
+#include <tcs3200.h>
+
+
+#define SW_ARRANQUE 2
+#define IN1 5  
+#define IN2 6
+#define PIN_SERVO 8  
+#define ENA 9 
+#define LED_ARRANQUE 12 
+#define TRIG_FRONTAL 22 
+#define ECHO_FRONTAL 23 
+#define TRIG_DERECHO 24 
+#define ECHO_DERECHO 25 
+#define TRIG_IZQUIERDO 26 
+#define ECHO_IZQUIERDO 27 
+#define TCS_S0 30 // Frecuencia escalado  
+#define TCS_S1 31 // Frecuencia escalado  
+#define TCS_S2 32 // Filtro de color 
+#define TCS_S3 33 // Filtro de color 
+#define TCS_OUT 34 // Salida de frecuencia
+
+#define POS_CENTRO 90 // Ángulo para ruedas rectas
+#define ANGULO_GIRO 30 // Ángulo de giro máximo (ajustable)
+
+#define DISTANCIA_SEGURA 30  
+#define DISTANCIA_PARED 15 
+  
+#define TIEMPO_DETECCION 500
+
+
+
+Servo miServo;
+
+
+int velocidadMotor = 200;
+int contadorLineas = 0;
+int gruposCompletos = 0;
+int AZUL_MIN = 50;    
+int AZUL_MAX = 150;
+int leerAzul() {
+    int suma = 0;
+    int muestras = 5;
+
+    for (int i = 0; i < muestras; i++) {
+        suma += pulseIn(TCS_OUT, LOW);
+        delay(50); 
+    }
+
+    return suma / muestras;
+}
+
+unsigned long tiempoUltimaDeteccion = 0;
+bool lineaDetectada = false;
+bool detenerCompletamente = false;
+
+float frontal;
+float derecha;
+float izquierda;
+
+
+
+void setup() {
+
+// ----- MOTOR ----- //
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  detenerMotor() ;
+
+  
+// ----- SENSOR DE COLOR (TCS3200) ----- //
+  pinMode(TCS_S0, OUTPUT);
+  pinMode(TCS_S1, OUTPUT);
+  pinMode(TCS_S2, OUTPUT);
+  pinMode(TCS_S3, OUTPUT);
+  pinMode(TCS_OUT, INPUT);
+  digitalWrite(TCS_S0, HIGH);  // Frecuencia alta (100%)
+  digitalWrite(TCS_S1, HIGH);
+
+// ----- SENSORES ULTRASÓNICOS ----- //
+  pinMode(TRIG_FRONTAL, OUTPUT);
+  pinMode(ECHO_FRONTAL, INPUT);
+  pinMode(TRIG_DERECHO, OUTPUT);
+  pinMode(ECHO_DERECHO, INPUT);
+  pinMode(TRIG_IZQUIERDO, OUTPUT);
+  pinMode(ECHO_IZQUIERDO, INPUT);
+
+  // ----- SWITCHES ----- //
+  pinMode(SW_ARRANQUE, INPUT_PULLUP);
+
+  pinMode(LED_ARRANQUE, OUTPUT);
+  digitalWrite(LED_ARRANQUE, LOW);
+
+
+  miServo.attach(PIN_SERVO);
+  miServo.write(POS_CENTRO);
+  delay(500);
+
+  centrarRuedas();
+  Serial.begin(9600);
+
+  calibrarAzul();
+
+}
+
+
+void loop() {
+
+    if (digitalRead(SW_ARRANQUE) == LOW && !detenerCompletamente) {
+        digitalWrite(LED_ARRANQUE, HIGH);
+        
+
+        frontal = leerUltrasonico(TRIG_FRONTAL, ECHO_FRONTAL);
+        derecha = leerUltrasonico(TRIG_DERECHO, ECHO_DERECHO);
+        izquierda = leerUltrasonico(TRIG_IZQUIERDO, ECHO_IZQUIERDO);
+
+
+         bool azulDetectado = detectarLineaAzul();
+    
+         if (azulDetectado) {
+         manejarLineaAzul();
+        }
+        else if (frontal < DISTANCIA_SEGURA) {
+            evitarObstaculo(derecha, izquierda);
+        } 
+        else if (derecha < DISTANCIA_PARED) {
+            ajustarIzquierda(); 
+        } 
+        else if (izquierda < DISTANCIA_PARED) {
+            ajustarDerecha();
+        } 
+        else {
+            moverAdelante();
+            centrarRuedas();
+        }
+
+        if (gruposCompletos >= 3) {
+            detenerCompletamente = true;
+            detenerMotor();
+        }
+    }else {
+        digitalWrite(LED_ARRANQUE, LOW);
+        detenerMotor();
+    }
+    delay(50);
+}
+  
+
+bool detectarLineaAzul() {
+  digitalWrite(TCS_S2, LOW);
+  digitalWrite(TCS_S3, HIGH);
+  
+  int frecuencia = pulseIn(TCS_OUT, LOW);
+  Serial.print("Valor azul: ");
+  Serial.println(frecuencia);
+  
+  
+  if (frecuencia >= AZUL_MIN && frecuencia <= AZUL_MAX) {
+    if (!lineaDetectada) {
+      tiempoUltimaDeteccion = millis();
+      lineaDetectada = true;
+    }
+    
+    if (millis() - tiempoUltimaDeteccion >= TIEMPO_DETECCION) {
+      return true;
+    }
+  } else {
+    lineaDetectada = false;
+  }
+  return false;
+}
+
+
+void calibrarAzul() {
+  AZUL_MIN = leerAzul() - 20;
+  AZUL_MAX = leerAzul() + 20;
+}
+
+void manejarLineaAzul() {
+    Serial.println("¡Línea azul detectada!");
+    contadorLineas++;
+    Serial.print("Líneas detectadas: ");
+    Serial.println(contadorLineas);
+   
+    detenerMotor();
+    unsigned long tiempoInicio = millis();
+        while (millis() - tiempoInicio < 1000) {
+        ejecutarComportamientoNormal();
+        delay(50);
+        }
+
+    if (contadorLineas % 4 == 0) {
+        gruposCompletos++;
+        Serial.print("Grupos completos: ");
+        Serial.println(gruposCompletos);
+    }
+    
+   
+    lineaDetectada = false;
+
+
+}
+void evitarObstaculo(float distDerecha, float distIzquierda) {
+    detenerMotor();
+    delay(200);
+    
+     if (distDerecha > distIzquierda) {
+        girarDerecha();
+    } else {
+        girarIzquierda();
+    }
+    
+    unsigned long tiempoInicio = millis();
+    while (millis() - tiempoInicio < 1000) {
+        ejecutarComportamientoNormal();
+        delay(50);
+        }
+}
+     
+     
+void ajustarDerecha() {
+    miServo.write(POS_CENTRO - ANGULO_GIRO/2); 
+    moverAdelante();
+}
+
+void ajustarIzquierda() {
+    miServo.write(POS_CENTRO + ANGULO_GIRO/2); 
+    moverAdelante();
+}
+
+float leerUltrasonico(uint8_t trigPin, uint8_t echoPin) {
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    return pulseIn(echoPin, HIGH) * 0.034 / 2;
+}
+
+
+void centrarRuedas() {
+    miServo.write(POS_CENTRO);
+    delay(50); 
+}
+
+void girarDerecha() {
+    miServo.write(POS_CENTRO - ANGULO_GIRO); 
+    delay(580);
+}
+
+void girarIzquierda() {
+    miServo.write(POS_CENTRO + ANGULO_GIRO);
+    delay(50);
+}
+void detenerMotor() {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, LOW);
+    analogWrite(ENA, 0);
+}
+
+void moverAdelante() {
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+    int velocidadAjustada = map(constrain((int)frontal, 15, 30), 15, 30, 100, 200);
+analogWrite(ENA, velocidadAjustada);
+}
+
+void ejecutarComportamientoNormal() {
+    frontal = leerUltrasonico(TRIG_FRONTAL, ECHO_FRONTAL);
+    derecha = leerUltrasonico(TRIG_DERECHO, ECHO_DERECHO);
+    izquierda = leerUltrasonico(TRIG_IZQUIERDO, ECHO_IZQUIERDO);
+    
+    if (frontal < DISTANCIA_SEGURA) {
+        evitarObstaculo(derecha, izquierda);
+    }   
+    else if (derecha < DISTANCIA_PARED) {
+        ajustarIzquierda(); 
+    } 
+    else if (izquierda < DISTANCIA_PARED) {
+        ajustarDerecha();
+    } 
+    else {
+        moverAdelante();
+        centrarRuedas();
+    }
+}`
 
 
 ## 📷 Imágenes del Proyecto
