@@ -61,7 +61,7 @@ Lista detallada de los componentes utilizados:
 - **Servo motor Rev robotics REV-41-1097**
 - **Arduino Mega 2560**
 - **Batería de litio 18650 (3 UND)**
-- **Puente H L293D**
+- **Puente H BTS7620**
 - **Sensor de ultrasonido de distancia Arduino HC-SR04 (3 UND)**
 - **Controlador de velocidad PWM motores DC 4.5V-35V 5A 90W**
 -**Sensor de color TCS3200**
