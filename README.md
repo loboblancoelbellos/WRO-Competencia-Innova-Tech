@@ -359,6 +359,10 @@ void ejecutarComportamientoNormal() {
 ![WhatsApp Image 2025-06-11 at 11 30 43 (1)](https://github.com/user-attachments/assets/37ea05f4-1094-47cc-9b4d-57d9955f5d74)
 
 
+
+
+
+###End
 https://github.com/user-attachments/assets/5b9b6af9-1dc0-42e2-97a0-2b4a8a7b377a
 
 
@@ -368,6 +372,3 @@ https://github.com/user-attachments/assets/0cbedf66-c2a9-42e7-8ec2-c993cbc7e247
 
 
 https://github.com/user-attachments/assets/4da12f2d-5b15-4c4b-bec2-95b31f99be4c
-
-
-###End
