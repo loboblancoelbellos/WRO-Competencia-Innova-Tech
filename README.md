@@ -361,14 +361,6 @@ void ejecutarComportamientoNormal() {
 
 
 
+https://github.com/user-attachments/assets/db8308b1-8f24-42bc-a17b-12c1b1ada4b6
 
 ###End
-https://github.com/user-attachments/assets/5b9b6af9-1dc0-42e2-97a0-2b4a8a7b377a
-
-
-
-https://github.com/user-attachments/assets/0cbedf66-c2a9-42e7-8ec2-c993cbc7e247
-
-
-
-https://github.com/user-attachments/assets/4da12f2d-5b15-4c4b-bec2-95b31f99be4c
