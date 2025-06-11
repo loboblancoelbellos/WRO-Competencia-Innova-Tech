@@ -13,15 +13,7 @@ Este repositorio contiene todos los materiales necesarios para crear a "Ledma Te
 ## 📖 Introducción
 En este repositorio se observará un arduo proceso tanto de selección, así como de armado del carrito RC, para la categoría Futuros Ingenieros de la WRO. Fue un proceso realizado con gran esfuerzo, independientemente de las dificultades. Un trabajo en equipo y dedicación para dar lo mejor de nosotros en la demostración a los jueces, conociendo las bases de la robótica y aprendiendo mucho en el proceso nos basamos en mecánica, electrónica y programación, pensando siempre en aprender más para presentar así un proyecto capaz de desempeñar óptimamente y autónomamente todos los objetivos.
 
-https://github.com/user-attachments/assets/34db1717-7ee5-4427-b7ce-33cd23a99336
 
-
-
-https://github.com/user-attachments/assets/a000f5e6-2065-4bab-86da-848b4267a899
-
-
-
-https://github.com/user-attachments/assets/0c3ababa-52b7-41e4-bfa3-882f2bf13701
 
 
 
@@ -360,7 +352,15 @@ void ejecutarComportamientoNormal() {
 
 
 
+https://github.com/user-attachments/assets/34db1717-7ee5-4427-b7ce-33cd23a99336
 
-https://github.com/user-attachments/assets/db8308b1-8f24-42bc-a17b-12c1b1ada4b6
+
+
+https://github.com/user-attachments/assets/a000f5e6-2065-4bab-86da-848b4267a899
+
+
+
+https://github.com/user-attachments/assets/0c3ababa-52b7-41e4-bfa3-882f2bf13701
+
 
 ###End
