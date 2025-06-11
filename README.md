@@ -22,7 +22,8 @@ En este repositorio se observará un arduo proceso tanto de selección, así com
 
 Somos jovenes estudiantes de la universidad Rafael Belloso Chacín (URBE), donde nos conocimos en las aulas de la institucion como futuros ingenieros, al comienzo de la carrera y decidimos participar en la competencia por la pasión que compartimos de armar proyectos. La competencia nos llamo la atencion para poder expandir nuestros conocimientos de robótica, y explotar nuestras capacidades como un equipo de jovenes que buscan mirar más allá de sus fronteras. 
 
-![Imagen de WhatsApp 2025-05-09 a las 15 36 09_50ef62d2](https://github.com/user-attachments/assets/15973cbd-da89-4e19-a673-397c43b5946d)
+![WhatsApp Image 2025-06-07 at 17 47 40](https://github.com/user-attachments/assets/3568e8a1-b1b9-4abf-abde-68d06ec69484)
+
 
 **Chasis de referencias de modelado 3D**
 
