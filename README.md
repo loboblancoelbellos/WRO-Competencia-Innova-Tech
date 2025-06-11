@@ -411,7 +411,10 @@ void ejecutarComportamientoNormal() {
 
 
 
-![f182f248-332d-4e0e-91d6-c589c53b8569](https://github.com/user-attachments/assets/928ef8b4-f3d4-4d2e-adba-658ea7a31a75)
-![6fe93edc-0416-4aec-be8d-1000cb086013](https://github.com/user-attachments/assets/c8e77581-3c1c-4823-a72c-2bce103a2d1d)
-![1aefec54-36a0-4d6c-9e9c-7eaf7ccb67dd](https://github.com/user-attachments/assets/c70f54db-e780-4b2c-9e0b-4098685a08d8)
+![WhatsApp Image 2025-06-11 at 11 30 44](https://github.com/user-attachments/assets/85a05684-f892-4022-a1ce-7d447bbacfca)
+
+![WhatsApp Image 2025-06-11 at 11 30 43](https://github.com/user-attachments/assets/6367682f-6315-4bf5-9b20-e7e8c4e1a551)
+
+![WhatsApp Image 2025-06-11 at 11 30 43 (1)](https://github.com/user-attachments/assets/37ea05f4-1094-47cc-9b4d-57d9955f5d74)
+
 
