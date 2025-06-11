@@ -407,3 +407,9 @@ void ejecutarComportamientoNormal() {
 
 
 ###End
+
+
+
+
+
+![WhatsApp Image 2025-06-11 at 10 56 48](https://github.com/user-attachments/assets/8278f2ae-6345-4587-8400-c9dcccde1bad)
