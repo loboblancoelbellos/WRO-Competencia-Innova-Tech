@@ -59,7 +59,7 @@ Lista detallada de los componentes utilizados:
 - **Chasis de referencias de modelado 3D**
 - **Motor DC 12V 1A**
 - **Servo motor Rev robotics REV-41-1097**
-- **Arduino Mega 2640**
+- **Arduino Mega 2560**
 - **Batería de litio 18650 (3 UND)**
 - **Puente H L293D**
 - **Sensor de ultrasonido de distancia Arduino HC-SR04 (3 UND)**
@@ -72,7 +72,7 @@ Lista detallada de los componentes utilizados:
 ![servo motor rev](https://github.com/user-attachments/assets/b42de167-ad23-4dbd-b86a-e949ff78e697)
 
 
-**Arduino Mega 2060**
+**Arduino Mega 2560**
 
 ![descarga](https://github.com/user-attachments/assets/63b1213b-3a6c-4e2e-802f-76436bbadba5)
 
@@ -80,13 +80,13 @@ Lista detallada de los componentes utilizados:
 
 ![sensor de color ](https://github.com/user-attachments/assets/ad0d0900-5da0-4351-b7b1-c4a1550e4126)
 
-**12V Slim Battery**
+**Baterías De Litio 18650 3.7V a 7800mA**
 
-![REV-31-1302-12VSlimBattery-New-FINAL__87390](https://github.com/user-attachments/assets/818ae4ad-ad36-4a03-97f1-aa0ec1d8b731)
+[![](https://http2.mlstatic.com/D_NQ_NP_881915-MLV71037692218_082023-O.webp)](http://https://http2.mlstatic.com/D_NQ_NP_881915-MLV71037692218_082023-O.webp)
 
-**Puente H L298N**
+**Puente BTS7620**
 
-[![puente h](https://electromer.com.py/wp-content/uploads/2021/05/Driver-L298N.jpg "puente h")](http://https://electromer.com.py/wp-content/uploads/2021/05/Driver-L298N.jpg "puente h")
+[![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtPa_7xwP_nPM8AEbCk0sbADIqcjDeZRM3Ew&s)](http://https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtPa_7xwP_nPM8AEbCk0sbADIqcjDeZRM3Ew&s)
 
  **Sensor de ultrasonido de distancia Arduino HC-SR04**
 
@@ -97,15 +97,33 @@ Lista detallada de los componentes utilizados:
 [![suiche](https://sumador.com/cdn/shop/products/Suichetipobalancinde2pines2.jpg?v=1588622314 "suiche")](http://https://sumador.com/cdn/shop/products/Suichetipobalancinde2pines2.jpg?v=1588622314 "suiche")
 
 ## 🔨 Instalación y Montaje
-Pasos de montaje mecánico y electrico de los componentes:
+Pasos de montaje mecánico y eléctrico de los componentes:
 
-1.Diagrama de conexiones del sistema electrico.
+Diagrama de conexiones del sistema eléctrico.
 
-![Imagen de WhatsApp 2025-06-03 a las 11 18 23_69784173](https://github.com/user-attachments/assets/eab9610e-60d6-47f5-8467-b4cff3e96427)
+![WhatsApp Image 2025-06-11 at 10 56 48](https://github.com/user-attachments/assets/8278f2ae-6345-4587-8400-c9dcccde1bad)
 
-2. Montaje de sensores, motores y demas componentes sobre el chasis
-3. Correcta conexión de las diferentes dispocitivos.
-4. Programacion y planteamientos de funciones de la placa ArduinoMega
+**Partes mecánicas de conexión a las ruedas**
+
+Bajo un concepto mecánico manejado con piñones que se conectan al motor y del motor al eje principal para tener así la transferencia de potencia directo a las ruedas, este es el montaje de la parte trasera de motor con el eje principal y el chasis.
+
+[![motor ](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-0-1536x864.jpg "motor ")](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-0-1536x864.jpg "motor ")
+
+[![](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-1-1536x864.jpg)](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-1-1536x864.jpg)
+
+[![](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-2-1536x864.jpg)](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-2-1536x864.jpg)
+ 
+
+
+**Dirección delantera**
+En la parte delantera se utilizo un sistema sensillo con un servomotor conectado a una barra de dirección como puente a las ruedas.
+
+[![](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_04B-1-1536x864.jpg)](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_04B-1-1536x864.jpg)
+
+[![](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_04B-2-1536x864.jpg)](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_04B-2-1536x864.jpg)
+
+
+
 5. Pruebas finales del funcionamiento del carrito RC
    
 Codigo en Arduino IDE (codigo absuelto a cambios)
@@ -114,15 +132,13 @@ Codigo en Arduino IDE (codigo absuelto a cambios)
 
 ####Inline code
 
-`#include <Servo.h>
-#include <tcs3200.h>
-
+#include <Servo.h>
 
 #define SW_ARRANQUE 2
-#define IN1 5  
-#define IN2 6
+#define INH 4    
+#define IN1 5     
+#define IN2 6     
 #define PIN_SERVO 8  
-#define ENA 9 
 #define LED_ARRANQUE 12 
 #define TRIG_FRONTAL 22 
 #define ECHO_FRONTAL 23 
@@ -130,45 +146,20 @@ Codigo en Arduino IDE (codigo absuelto a cambios)
 #define ECHO_DERECHO 25 
 #define TRIG_IZQUIERDO 26 
 #define ECHO_IZQUIERDO 27 
-#define TCS_S0 30 // Frecuencia escalado  
-#define TCS_S1 31 // Frecuencia escalado  
-#define TCS_S2 32 // Filtro de color 
-#define TCS_S3 33 // Filtro de color 
-#define TCS_OUT 34 // Salida de frecuencia
 
-#define POS_CENTRO 90 // Ángulo para ruedas rectas
-#define ANGULO_GIRO 30 // Ángulo de giro máximo (ajustable)
+#define POS_CENTRO 71 // Ángulo para ruedas rectas
+#define ANGULO_GIRO 25 // Ángulo de giro máximo (ajustable)
 
 #define DISTANCIA_SEGURA 30  
 #define DISTANCIA_PARED 15 
-  
-#define TIEMPO_DETECCION 500
-
-
 
 Servo miServo;
 
 
-int velocidadMotor = 200;
-int contadorLineas = 0;
-int gruposCompletos = 0;
-int AZUL_MIN = 50;    
-int AZUL_MAX = 150;
-int leerAzul() {
-    int suma = 0;
-    int muestras = 5;
+int velocidadMotor = 25;
 
-    for (int i = 0; i < muestras; i++) {
-        suma += pulseIn(TCS_OUT, LOW);
-        delay(50); 
-    }
-
-    return suma / muestras;
-}
-
-unsigned long tiempoUltimaDeteccion = 0;
-bool lineaDetectada = false;
 bool detenerCompletamente = false;
+
 
 float frontal;
 float derecha;
@@ -178,23 +169,15 @@ float izquierda;
 
 void setup() {
 
+
 // ----- MOTOR ----- //
-  pinMode(ENA, OUTPUT);
+  pinMode(INH, OUTPUT);
+  digitalWrite(INH, HIGH); 
+  
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
-  detenerMotor() ;
 
   
-// ----- SENSOR DE COLOR (TCS3200) ----- //
-  pinMode(TCS_S0, OUTPUT);
-  pinMode(TCS_S1, OUTPUT);
-  pinMode(TCS_S2, OUTPUT);
-  pinMode(TCS_S3, OUTPUT);
-  pinMode(TCS_OUT, INPUT);
-  digitalWrite(TCS_S0, HIGH);  // Frecuencia alta (100%)
-  digitalWrite(TCS_S1, HIGH);
-
-// ----- SENSORES ULTRASÓNICOS ----- //
   pinMode(TRIG_FRONTAL, OUTPUT);
   pinMode(ECHO_FRONTAL, INPUT);
   pinMode(TRIG_DERECHO, OUTPUT);
@@ -211,33 +194,34 @@ void setup() {
 
   miServo.attach(PIN_SERVO);
   miServo.write(POS_CENTRO);
-  delay(500);
+  delay(800);
 
   centrarRuedas();
   Serial.begin(9600);
 
-  calibrarAzul();
+  
 
 }
 
 
+
 void loop() {
+
 
     if (digitalRead(SW_ARRANQUE) == LOW && !detenerCompletamente) {
         digitalWrite(LED_ARRANQUE, HIGH);
         
-
+        // Leer sensores primero
         frontal = leerUltrasonico(TRIG_FRONTAL, ECHO_FRONTAL);
         derecha = leerUltrasonico(TRIG_DERECHO, ECHO_DERECHO);
         izquierda = leerUltrasonico(TRIG_IZQUIERDO, ECHO_IZQUIERDO);
 
+        Serial.print("Frontal: "); Serial.print(frontal);
+        Serial.print(" Derecha: "); Serial.print(derecha);
+        Serial.print(" Izquierda: "); Serial.println(izquierda);
 
-         bool azulDetectado = detectarLineaAzul();
-    
-         if (azulDetectado) {
-         manejarLineaAzul();
-        }
-        else if (frontal < DISTANCIA_SEGURA) {
+        // Tomar decisiones basadas en lecturas
+        if (frontal < DISTANCIA_SEGURA) {
             evitarObstaculo(derecha, izquierda);
         } 
         else if (derecha < DISTANCIA_PARED) {
@@ -250,76 +234,17 @@ void loop() {
             moverAdelante();
             centrarRuedas();
         }
-
-        if (gruposCompletos >= 3) {
-            detenerCompletamente = true;
-            detenerMotor();
-        }
-    }else {
+    }
+    else {
         digitalWrite(LED_ARRANQUE, LOW);
         detenerMotor();
     }
-    delay(50);
-}
-  
-
-bool detectarLineaAzul() {
-  digitalWrite(TCS_S2, LOW);
-  digitalWrite(TCS_S3, HIGH);
-  
-  int frecuencia = pulseIn(TCS_OUT, LOW);
-  Serial.print("Valor azul: ");
-  Serial.println(frecuencia);
-  
-  
-  if (frecuencia >= AZUL_MIN && frecuencia <= AZUL_MAX) {
-    if (!lineaDetectada) {
-      tiempoUltimaDeteccion = millis();
-      lineaDetectada = true;
-    }
-    
-    if (millis() - tiempoUltimaDeteccion >= TIEMPO_DETECCION) {
-      return true;
-    }
-  } else {
-    lineaDetectada = false;
-  }
-  return false;
+    delay(250);
 }
 
-
-void calibrarAzul() {
-  AZUL_MIN = leerAzul() - 20;
-  AZUL_MAX = leerAzul() + 20;
-}
-
-void manejarLineaAzul() {
-    Serial.println("¡Línea azul detectada!");
-    contadorLineas++;
-    Serial.print("Líneas detectadas: ");
-    Serial.println(contadorLineas);
-   
-    detenerMotor();
-    unsigned long tiempoInicio = millis();
-        while (millis() - tiempoInicio < 1000) {
-        ejecutarComportamientoNormal();
-        delay(50);
-        }
-
-    if (contadorLineas % 4 == 0) {
-        gruposCompletos++;
-        Serial.print("Grupos completos: ");
-        Serial.println(gruposCompletos);
-    }
-    
-   
-    lineaDetectada = false;
-
-
-}
 void evitarObstaculo(float distDerecha, float distIzquierda) {
     detenerMotor();
-    delay(200);
+    delay(250);
     
      if (distDerecha > distIzquierda) {
         girarDerecha();
@@ -330,10 +255,11 @@ void evitarObstaculo(float distDerecha, float distIzquierda) {
     unsigned long tiempoInicio = millis();
     while (millis() - tiempoInicio < 1000) {
         ejecutarComportamientoNormal();
-        delay(50);
+        delay(250);
         }
 }
      
+          
      
 void ajustarDerecha() {
     miServo.write(POS_CENTRO - ANGULO_GIRO/2); 
@@ -347,9 +273,9 @@ void ajustarIzquierda() {
 
 float leerUltrasonico(uint8_t trigPin, uint8_t echoPin) {
     digitalWrite(trigPin, LOW);
-    delayMicroseconds(2);
+    delayMicroseconds(100);
     digitalWrite(trigPin, HIGH);
-    delayMicroseconds(10);
+    delayMicroseconds(50);
     digitalWrite(trigPin, LOW);
     return pulseIn(echoPin, HIGH) * 0.034 / 2;
 }
@@ -357,29 +283,32 @@ float leerUltrasonico(uint8_t trigPin, uint8_t echoPin) {
 
 void centrarRuedas() {
     miServo.write(POS_CENTRO);
-    delay(50); 
+    delay(120); 
 }
 
 void girarDerecha() {
-    miServo.write(POS_CENTRO - ANGULO_GIRO); 
-    delay(580);
+    miServo.write(POS_CENTRO + ANGULO_GIRO); 
+    delay(80);
 }
 
 void girarIzquierda() {
-    miServo.write(POS_CENTRO + ANGULO_GIRO);
-    delay(50);
+    miServo.write(POS_CENTRO - ANGULO_GIRO);
+    delay(80);
 }
 void detenerMotor() {
     digitalWrite(IN1, LOW);
     digitalWrite(IN2, LOW);
-    analogWrite(ENA, 0);
 }
 
 void moverAdelante() {
     digitalWrite(IN1, HIGH);
     digitalWrite(IN2, LOW);
-    int velocidadAjustada = map(constrain((int)frontal, 15, 30), 15, 30, 100, 200);
-analogWrite(ENA, velocidadAjustada);
+    if(frontal > 0) {
+        int velocidadAjustada = map(constrain((int)frontal, 3, 10), 3, 5, 7, 10);
+        analogWrite(IN1, velocidadAjustada);
+    } else {
+        analogWrite(IN1, velocidadMotor);
+    }
 }
 
 void ejecutarComportamientoNormal() {
@@ -400,16 +329,16 @@ void ejecutarComportamientoNormal() {
         moverAdelante();
         centrarRuedas();
     }
-}`
+}
 
 
 ## 📷 Imágenes del Proyecto
 
+![f182f248-332d-4e0e-91d6-c589c53b8569](https://github.com/user-attachments/assets/928ef8b4-f3d4-4d2e-adba-658ea7a31a75)
 
-###End
+![6fe93edc-0416-4aec-be8d-1000cb086013](https://github.com/user-attachments/assets/c8e77581-3c1c-4823-a72c-2bce103a2d1d)
 
-
-
+![1aefec54-36a0-4d6c-9e9c-7eaf7ccb67dd](https://github.com/user-attachments/assets/c70f54db-e780-4b2c-9e0b-4098685a08d8)
 
 ![WhatsApp Image 2025-06-11 at 11 30 44](https://github.com/user-attachments/assets/85a05684-f892-4022-a1ce-7d447bbacfca)
 
@@ -418,3 +347,4 @@ void ejecutarComportamientoNormal() {
 ![WhatsApp Image 2025-06-11 at 11 30 43 (1)](https://github.com/user-attachments/assets/37ea05f4-1094-47cc-9b4d-57d9955f5d74)
 
 
+###End
