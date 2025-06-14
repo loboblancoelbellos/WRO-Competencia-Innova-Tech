@@ -1,0 +1,124 @@
+ ###Code Blocks (multi-language) & highlighting
+
+####Inline code
+
+#include <Servo.h>
+
+#define SW_ARRANQUE 2 #define INH 4
+#define IN1 5
+#define IN2 6
+#define PIN_SERVO 8
+#define LED_ARRANQUE 12 #define TRIG_FRONTAL 22 #define ECHO_FRONTAL 23 #define TRIG_DERECHO 24 #define ECHO_DERECHO 25 #define TRIG_IZQUIERDO 26 #define ECHO_IZQUIERDO 27
+
+#define POS_CENTRO 71 // Ángulo para ruedas rectas #define ANGULO_GIRO 25 // Ángulo de giro máximo (ajustable)
+
+#define DISTANCIA_SEGURA 30
+#define DISTANCIA_PARED 15
+
+Servo miServo;
+
+int velocidadMotor = 25;
+
+bool detenerCompletamente = false;
+
+float frontal; float derecha; float izquierda;
+
+void setup() {
+
+// ----- MOTOR ----- // pinMode(INH, OUTPUT); digitalWrite(INH, HIGH);
+
+pinMode(IN1, OUTPUT); pinMode(IN2, OUTPUT);
+
+pinMode(TRIG_FRONTAL, OUTPUT); pinMode(ECHO_FRONTAL, INPUT); pinMode(TRIG_DERECHO, OUTPUT); pinMode(ECHO_DERECHO, INPUT); pinMode(TRIG_IZQUIERDO, OUTPUT); pinMode(ECHO_IZQUIERDO, INPUT);
+
+// ----- SWITCHES ----- // pinMode(SW_ARRANQUE, INPUT_PULLUP);
+
+pinMode(LED_ARRANQUE, OUTPUT); digitalWrite(LED_ARRANQUE, LOW);
+
+miServo.attach(PIN_SERVO); miServo.write(POS_CENTRO); delay(800);
+
+centrarRuedas(); Serial.begin(9600);
+
+}
+
+void loop() {
+
+if (digitalRead(SW_ARRANQUE) == LOW && !detenerCompletamente) {
+    digitalWrite(LED_ARRANQUE, HIGH);
+    
+    // Leer sensores primero
+    frontal = leerUltrasonico(TRIG_FRONTAL, ECHO_FRONTAL);
+    derecha = leerUltrasonico(TRIG_DERECHO, ECHO_DERECHO);
+    izquierda = leerUltrasonico(TRIG_IZQUIERDO, ECHO_IZQUIERDO);
+
+    Serial.print("Frontal: "); Serial.print(frontal);
+    Serial.print(" Derecha: "); Serial.print(derecha);
+    Serial.print(" Izquierda: "); Serial.println(izquierda);
+
+    // Tomar decisiones basadas en lecturas
+    if (frontal < DISTANCIA_SEGURA) {
+        evitarObstaculo(derecha, izquierda);
+    } 
+    else if (derecha < DISTANCIA_PARED) {
+        ajustarIzquierda(); 
+    } 
+    else if (izquierda < DISTANCIA_PARED) {
+        ajustarDerecha();
+    } 
+    else {
+        moverAdelante();
+        centrarRuedas();
+    }
+}
+else {
+    digitalWrite(LED_ARRANQUE, LOW);
+    detenerMotor();
+}
+delay(250);
+}
+
+void evitarObstaculo(float distDerecha, float distIzquierda) { detenerMotor(); delay(250);
+
+ if (distDerecha > distIzquierda) {
+    girarDerecha();
+} else {
+    girarIzquierda();
+}
+
+unsigned long tiempoInicio = millis();
+while (millis() - tiempoInicio < 1000) {
+    ejecutarComportamientoNormal();
+    delay(250);
+    }
+}
+
+void ajustarDerecha() { miServo.write(POS_CENTRO - ANGULO_GIRO/2); moverAdelante(); }
+
+void ajustarIzquierda() { miServo.write(POS_CENTRO + ANGULO_GIRO/2); moverAdelante(); }
+
+float leerUltrasonico(uint8_t trigPin, uint8_t echoPin) { digitalWrite(trigPin, LOW); delayMicroseconds(100); digitalWrite(trigPin, HIGH); delayMicroseconds(50); digitalWrite(trigPin, LOW); return pulseIn(echoPin, HIGH) * 0.034 / 2; }
+
+void centrarRuedas() { miServo.write(POS_CENTRO); delay(120); }
+
+void girarDerecha() { miServo.write(POS_CENTRO + ANGULO_GIRO); delay(80); }
+
+void girarIzquierda() { miServo.write(POS_CENTRO - ANGULO_GIRO); delay(80); } void detenerMotor() { digitalWrite(IN1, LOW); digitalWrite(IN2, LOW); }
+
+void moverAdelante() { digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW); if(frontal > 0) { int velocidadAjustada = map(constrain((int)frontal, 3, 10), 3, 5, 7, 10); analogWrite(IN1, velocidadAjustada); } else { analogWrite(IN1, velocidadMotor); } }
+
+void ejecutarComportamientoNormal() { frontal = leerUltrasonico(TRIG_FRONTAL, ECHO_FRONTAL); derecha = leerUltrasonico(TRIG_DERECHO, ECHO_DERECHO); izquierda = leerUltrasonico(TRIG_IZQUIERDO, ECHO_IZQUIERDO);
+
+if (frontal < DISTANCIA_SEGURA) {
+    evitarObstaculo(derecha, izquierda);
+}   
+else if (derecha < DISTANCIA_PARED) {
+    ajustarIzquierda(); 
+} 
+else if (izquierda < DISTANCIA_PARED) {
+    ajustarDerecha();
+} 
+else {
+    moverAdelante();
+    centrarRuedas();
+}
+}
