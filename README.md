@@ -90,7 +90,7 @@ Lista detallada de los componentes utilizados:
 
 **Puente H L298N**
 
-
+![Sin títulopuente h rojo](https://github.com/user-attachments/assets/c998e194-728f-4ca4-acd2-dbf268346189)
 
  **Sensor de ultrasonido de distancia Arduino HC-SR04**
 
@@ -101,7 +101,7 @@ Lista detallada de los componentes utilizados:
 [![suiche](https://sumador.com/cdn/shop/products/Suichetipobalancinde2pines2.jpg?v=1588622314 "suiche")](http://https://sumador.com/cdn/shop/products/Suichetipobalancinde2pines2.jpg?v=1588622314 "suiche")
 
 ## 🔨 Instalación y Montaje
-Pasos de montaje mecánico y eléctrico de los compo![Sin títulopuente h rojo](https://github.com/user-attachments/assets/c998e194-728f-4ca4-acd2-dbf268346189)
+Pasos de montaje mecánico y eléctrico de los compo
 nentes:
 
 Diagrama de conexiones del sistema eléctrico.
@@ -109,7 +109,7 @@ Diagrama de conexiones del sistema eléctrico.
 ![WhatsApp Image 2025-06-11 at 10 56 48](https://github.com/user-attachments/assets/8278f2ae-6345-4587-8400-c9dcccde1bad)
 
 **Partes mecánicas de conexión a las ruedas**
-![Sin títulopuente h rojo](https://github.com/user-attachments/assets/68d9424c-41b9-4ce7-a621-3913c139a8af)
+
 
 Bajo un concepto mecánico manejado con piñones que se conectan al motor y del motor al eje principal para tener así la transferencia de potencia directo a las ruedas, este es el montaje de la parte trasera de motor con el eje principal y el chasis.
 
