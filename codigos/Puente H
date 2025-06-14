@@ -1,0 +1,32 @@
+// Definición de pines
+const int ENA = 9;  // Control de velocidad (PWM)
+const int IN1 = 7;  // Dirección del motor
+const int IN2 = 8;  // Dirección del motor
+
+void setup() {
+    pinMode(ENA, OUTPUT);
+    pinMode(IN1, OUTPUT);
+    pinMode(IN2, OUTPUT);
+}
+
+void loop() {
+    // Giro en un sentido
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+    analogWrite(ENA, 150);  // Velocidad media
+    delay(3000);  // Mantener el giro por 3 segundos
+
+    // Detener el motor
+    analogWrite(ENA, 0);
+    delay(1000);
+
+    // Giro en sentido contrario
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH);
+    analogWrite(ENA, 200);  // Velocidad más alta
+    delay(3000);
+
+    // Detener el motor
+    analogWrite(ENA, 0);
+    delay(1000);
+}
