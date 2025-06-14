@@ -1,0 +1,23 @@
+#include <Servo.h>
+
+Servo miServo;       // Crea un objeto servo
+int pinServo = 9;    // Pin de conexión del servo
+int angulo = 0;      // Variable para almacenar el ángulo
+
+void setup() {
+  miServo.attach(pinServo);  // Conecta el servo al pin
+}
+
+void loop() {
+  // Mueve el servo de 0° a 180° en pasos de 1°
+  for(angulo = 0; angulo <= 180; angulo++) {  
+    miServo.write(angulo);    // Envía el ángulo al servo
+    delay(15);                // Tiempo para llegar a la posición
+  }
+  
+  // Mueve el servo de 180° a 0° en pasos de 1°
+  for(angulo = 180; angulo >= 0; angulo--) {  
+    miServo.write(angulo);
+    delay(15);
+  }
+}
