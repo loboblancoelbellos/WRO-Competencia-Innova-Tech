@@ -1,0 +1,32 @@
+const int trigPin = 9;
+const int echoPin = 10;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  // Limpia el trigger
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  
+  // Envía pulso de 10μs
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  // Lee el tiempo de retorno
+  long duration = pulseIn(echoPin, HIGH);
+  
+  // Calcula distancia (en cm)
+  float distance = duration * 0.034 / 2;
+  
+  // Muestra resultados
+  Serial.print("Distancia: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  
+  delay(500);  // Espera entre mediciones
+}
