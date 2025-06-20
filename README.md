@@ -62,7 +62,7 @@ https://dukedoks.com/portfolio/guia-chasis-rc/
 Lista detallada de los componentes utilizados:
 - **Chasis de referencias de modelado 3D**
 - **Motor DC 9V kit ultimate 2.0**
-- **Servo motor Rev robotics REV-41-1097**
+- **Servo Motor Futaba S3003 08-sd-025**
 - **Arduino Mega 2560**
 - **Batería de litio 18650 (3 UND)**
 - **Puente H L298N**
@@ -72,17 +72,67 @@ Lista detallada de los componentes utilizados:
 
 **Servo motor Rev robotics REV-41-1097**
 
+[![servomotor ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCsksBOFdDB5BY8tKZa6eUbbB8zCaAIml6zw&s "servomotor ")](http://https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCsksBOFdDB5BY8tKZa6eUbbB8zCaAIml6zw&s "servomotor ")
 
-![servo motor rev](https://github.com/user-attachments/assets/b42de167-ad23-4dbd-b86a-e949ff78e697)
+Descripción: Servo estándar de 180° usado en robótica y modelismo, con engranajes de nylon 214.
 
+Ventajas:
+
+1. Precisión: Control angular exacto mediante señales PWM 14.
+
+2. Costo bajo: Opción económica para proyectos básicos 10.
+
+3. Compatibilidad: Funciona con Arduino (ejemplo: control de brazos robóticos) 10.
+
+Desventajas:
+
+ 1. Torque limitado: 3.2 kg/cm a 4.8V (insuficiente para cargas pesadas) 2.
+
+2. Fragilidad: Engranajes de nylon propensos a desgaste 14.
+
+3. Voltaje crítico: Requiere regulación precisa (recomendado 6V con UBEC)
 
 **Arduino Mega 2560**
 
 ![descarga](https://github.com/user-attachments/assets/63b1213b-3a6c-4e2e-802f-76436bbadba5)
 
+El Arduino Mega 2560 es una placa de desarrollo basada en el microcontrolador ATmega2560, diseñada para proyectos que requieren más pines de E/S y memoria que modelos como el Arduino Uno. Es ampliamente utilizado en robótica, automatización y sistemas de control complejos.
+
+Ventajas:
+
+1. Múltiples I/O: 54 pines digitales y 16 analógicos .
+
+2. Compatibilidad: Soporta librerías para sensores (TCS3200, HC-SR04).
+
+3. Comunidad amplia: Documentación extensa y ejemplos de código.
+
+Desventajas:
+
+1. Consumo de energía: Alto vs. alternativas como ESP32.
+
+2. Limitación de RAM: 8 KB insuficiente para procesamiento de imágenes complejas .
+
+3. Velocidad: Procesador de 16 MHz (lento para tareas avanzadas)
+
 **sensor der color TCS3200**
 
 ![sensor de color ](https://github.com/user-attachments/assets/ad0d0900-5da0-4351-b7b1-c4a1550e4126)
+
+Ventajas:
+
+1. Simpleza: Interfaz digital directa con microcontroladores 15.
+
+2. Bajo costo: Ideal para proyectos educativos 11.
+
+3. Configurable: Filtros RGB seleccionables por software 15.
+
+Desventajas:
+
+1. Sin filtro IR: Sensible a interferencias lumínicas 11.
+
+2. Precisión limitada: Error del 0.2% a 50 kHz 15.
+
+3. Calibración manual: Requiere ajuste de umbrales para colores similares
 
 **Baterías De Litio 18650 3.7V a 7800mA**
 
@@ -100,6 +150,30 @@ Lista detallada de los componentes utilizados:
 
 [![suiche](https://sumador.com/cdn/shop/products/Suichetipobalancinde2pines2.jpg?v=1588622314 "suiche")](http://https://sumador.com/cdn/shop/products/Suichetipobalancinde2pines2.jpg?v=1588622314 "suiche")
 
+**motor motor Makeblock 9VDC de 185 RPM**
+
+![motor makeblock 9v](https://github.com/user-attachments/assets/8a9cdd8b-57d4-416b-b355-9b4c4810f2ba)
+
+### **Descripcion**
+
+El motor Makeblock 9VDC de 185 RPM es el motor más comúnmente utilizado en la plataforma Makeblock o proyectos de robotica en general. Está impulsado por corriente continua y es la opción ideal para que las cosas se muevan en todo tipo de proyectos.
+
+### Ventajas:
+
+1. Alto torque: Ideales para cargas medias gracias a su caja reductora (ejemplo: 185 RPM para modelos de 9V) 
+
+2. Compatibilidad: Integrados con placas como MegaPi (basada en Arduino Mega 2560) 
+
+3. Durabilidad: Piezas de aluminio anodizado en el kit Ultimate 2.0 9.
+
+#### Desventajas:
+
+1. Consumo energético: Requieren baterías de 9V (6xAA) o fuente externa 13.
+
+2. Control complejo: Necesitan drivers como el L298N para PWM 9.
+
+3. Ruido: Los engranajes pueden generar sonido en cargas altas 
+
 ## 🔨 Instalación y Montaje
 Pasos de montaje mecánico y eléctrico de los compo
 nentes:
@@ -108,6 +182,7 @@ Diagrama de conexiones del sistema eléctrico.
 
 ![WhatsApp Image 2025-06-11 at 10 56 48](https://github.com/user-attachments/assets/8278f2ae-6345-4587-8400-c9dcccde1bad)
 
+Para el diagrama de coneccion que se uso cirkit desirgner para poder realiza una coneccion visual de donde van los pines y como va a ir cableado todo el sistema electrico y como se compone a la hora de armar 
 **Partes mecánicas de conexión a las ruedas**
 
 
@@ -338,9 +413,4 @@ void ejecutarComportamientoNormal() {
 }
 
 
-
-
-
-
 ###End
-![motor makeblock 9v](https://github.com/user-attachments/assets/8a9cdd8b-57d4-416b-b355-9b4c4810f2ba)
