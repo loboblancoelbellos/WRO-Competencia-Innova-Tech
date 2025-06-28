@@ -7,10 +7,10 @@
 #define PIN_SERVO 6       // Pin para el servo de dirección
 
 // --- Parámetros de Calibración del Servo ---
-#define POS_CENTRO 90      // Ángulo del servo para ruedas rectas (ajustar si es necesario)
+#define POS_CENTRO 94      // Ángulo del servo para ruedas rectas (ajustar si es necesario)
 #define ANGULO_GIRO 30     // Grados a sumar/restar de POS_CENTRO para giros
-#define ANGULO_DERECHA (POS_CENTRO + ANGULO_GIRO) // Ángulo para girar a la derecha
-#define ANGULO_IZQUIERDA (POS_CENTRO - ANGULO_GIRO) // Ángulo para girar a la izquierda
+#define ANGULO_DERECHA (POS_CENTRO + ANGULO_GIRO + 18) // Ángulo para girar a la derecha
+#define ANGULO_IZQUIERDA (POS_CENTRO - ANGULO_GIRO - 8) // Ángulo para girar a la izquierda
 
 // --- Parámetros de Velocidad del Motor de Tracción ---
 #define VELOCIDAD_MINIMA 80   // Velocidad mínima del motor (0-255 PWM)

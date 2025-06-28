@@ -14,10 +14,10 @@
 #define ECHO_IZQUIERDO 12 // Pin ECHO del sensor ultrasónico izquierdo
 
 // --- Parámetros de Calibración y Comportamiento ---
-#define POS_CENTRO 90      // Ángulo del servo para ir recto (ajustar si es necesario)
-#define ANGULO_GIRO_DERECHA POS_CENTRO + ANGULO_MAX_GIRO // Ángulo para girar a la derecha
+#define POS_CENTRO 94      // Ángulo del servo para ir recto (ajustar si es necesario)
+#define ANGULO_GIRO_DERECHA POS_CENTRO + ANGULO_MAX_GIRO + 10 // Ángulo para girar a la derecha
 #define ANGULO_GIRO_IZQUIERDA POS_CENTRO - ANGULO_MAX_GIRO // Ángulo para girar a la izquierda
-#define ANGULO_MAX_GIRO 30 // Máximo ángulo de giro para el servo (e.g., 30 grados a cada lado del centro)
+#define ANGULO_MAX_GIRO 38 // Máximo ángulo de giro para el servo (e.g., 30 grados a cada lado del centro)
 
 #define DISTANCIA_PARADA_FRONTA 20 // Distancia en cm para detenerse frente a un muro
 #define DISTANCIA_SEGURA 60        // Distancia en cm para reducir la velocidad (usado en el avance inicial)
@@ -429,4 +429,3 @@ void ajustarVelocidadEnRecta() {
     motorDelante(VELOCIDAD_MAXIMA); // Velocidad máxima si el camino está libre
   }
 }
-
