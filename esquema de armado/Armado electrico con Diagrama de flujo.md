@@ -1,43 +1,38 @@
-## ensamblaje de motor 
 
-Componentes: 10 tornillos M3 de 8mm, 8 tuercas M3 y 2 rodamientos de 12x18x4mm
+## **diagrama electrico**
 
-Piezas impresas: “Rear-Frame_L”, “Rear-Frame_R_A” o “Rear-Frame_R_B”, “Rear-Frame-Lower”, “Rear-Axis”, “Clamp” x2, “Rear-Flex-1”, “Rear-Flex-2” y “Rear-Frame-Backing”
-
-Bloque trasero. Colocamos los rodamientos en “Rear-Frame_L” y “Rear-Frame_R”. Unimos una de estas dos últimas con “Rear-Frame-Lower” con 2 tuercas y 2 tornillos M3 de 8mm, introducimos el eje “Rear-Axis” a través del rodamiento y unimos la otra pieza con otras 2 tuercas y otros 2 tornillos M3 de 8mm. Después unimos “Rear-Flex-1” y uno de los “Clamp” a “Rear-Frame-Lower” por la parte delantera (la mas alta) con 2 tuercas y 2 tornillos M3 de 8mm haciendo un sandwich y hacemos lo mismo con “Rear-Flex-2” y otro “clamp” en la parte trasera. Para terminar reforzamos el conjunto con la pieza “Rear-Frame-Backing” y 2 tornillos M3 de 8mm.
-
-La pieza “Rear-Frame_R” es la pieza donde se ancla el motor. Esta pieza funciona en conjunto a uno de los dos piñones. Hay dos versiones de estas piezas, las dos son buenas, puedes utilizar la que mejor te funcione a ti. La más sencilla y la que yo recomiendo es la versión “A”. La pieza donde va el motor es plana y el piñón se coloca introduciendo dos tornillos en el sentido del eje del motor, y que entran tan justos que ejercen fuerza sobre el eje para que el piñón quede fijo. En la versión “B”, la pieza donde se sujeta el motor lleva dos salientes para ganar espacio para esta versión del piñón. Este piñón lleva dos huecos para introducir dos tuercas por las que pasarán dos tornillos M3 de 5mm. Estos tornillos se apretarán contra el eje del motor para que quede sujeto. En este paso solo necesitamos la pieza “Rear-Frame_R” pero necesitarás poner la “A” o la “B” dependiendo del piñón que vayas a usar, “Gear-1_A” o “Gear-2_B”.
-
-[![](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-0-1536x864.jpg)](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-0-1536x864.jpg)
-
-[![](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-1-1536x864.jpg)](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-1-1536x864.jpg)
-
-[![](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-2-1536x864.jpg)](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_02-2-1536x864.jpg)
+![circuit_image](https://github.com/user-attachments/assets/2e3a6b02-0ed8-4931-bf9c-d51e61286a32)
 
 
-## Armado de la direccion 
 
-Componentes: 2 tornillos M3 de 8mm, 2 tuercas M3 y 4 rodamientos 8x12x3,5mm
+## Diagrama de Flujo del CircuitoEste documento presenta un diagrama de flujo que ilustra la lógica operativa de un circuito, basado en la imagen de referencia proporcionada.
 
-Piezas impresas: “Wheel-Hub” x2, “Wheel-Axis” x4 y “Wheel-Axis-Nut” x2
+    A[Inicio] --> B{Encendido};
+    B --> C[Verificar Voltaje de Batería];
+    C -- Voltaje OK --> D[Inicializar Arduino UNO];
+    C -- Voltaje Bajo --> E[Indicar Batería Baja / Apagar];
+    D --> F[Inicializar Sensores Ultrasónicos];
+    F --> G[Inicializar Servo Motor];
+    F --> H[Inicializar Controlador de Motor];
+    G --> I[Iniciar Bucle Principal];
+    I --> J[Leer Distancia del Sensor 1];
+    J --> K[Leer Distancia del Sensor 2];
+    J --> L[Leer Distancia del Sensor 3];
+    K --> M{Obstáculo Detectado?};
+    M -- Sí --> N[Mover Servo Motor];
+    N --> O[Controlar Motor DC a Través del Controlador];
+    M -- No --> P[Continuar Monitoreando];
+    O --> Q[Esperar / Retrasar];
+    Q --> I;
+    P --> I;
 
-Ejes delanteros. Encajamos un rodamiento por cada lado en las piezas “Wheel-Hub”, por otro lado formamos cada eje juntando dos piezas “Wheel-Axis” colocando una tuerca M3 en el hueco interno. Introducimos el conjunto a través de los rodamientos y por la otra punta lo fijamos con los “Wheel-Axis-Nut” y los tornillos.
 
-[![](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_03-1-1536x864.jpg)](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_03-1-1536x864.jpg)
+**Explicación Detallada del Diagrama de Flujo**:El diagrama de flujo desglosa los pasos inferidos del funcionamiento del circuito:Inicio:Representa el punto de partida para la secuencia de operaciones del circuito.
 
-[![](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_03-2-1536x864.jpg)](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_03-2-1536x864.jpg)
+**ENCENDIDO**:Se refiere al momento en que el circuito recibe energía. Basado en la imagen original, esto se logra a través de las baterías de iones de litio (18650 Li-ion).Verificar Voltaje de Batería:Aunque no se visualiza un componente específico para esta tarea en el circuito, se asume como una buena práctica. La lógica aquí es asegurar que la fuente de energía sea adecuada para el funcionamiento continuo.Voltaje OK: Si el nivel de voltaje es suficiente, el sistema procede a inicializar el microcontrolador.Voltaje Bajo: Si el voltaje es crítico, el sistema podría emitir una advertencia visual o sonora, o incluso apagarse para proteger los componentes y prolongar la vida útil de las baterías.
 
-Bloque Delantero. Si has construido el bloque delantero con el servo pequeño, salta este paso. Si lo que buscas es hacerlo con el servo grande continúa. Los archivos exclusivos para este bloque tienen el prefijo “B” en su nombre.
+**Inicializar Arduino UNO**:El corazón del circuito, el microcontrolador Arduino UNO, comienza su secuencia de arranque. Esto incluye la configuración de sus puertos (pines de entrada/salida) y la preparación para la ejecución del código.Inicializar Sensores Ultrasónicos Los tres sensores HC-SR04 se configuran para su función principal: emitir pulsos de sonido y medir el tiempo que tardan en regresar para calcular distancias.Inicializar Servo Motor El servo motor se establece en una posición predeterminada, que generalmente es su punto central o una posición de reposo inicial. Inicializar Controlador de Motor El módulo controlador de motor L298N se prepara para recibir señales del Arduino y controlar el motor de corriente continua (DC).
 
-Componentes: 4 tuercas M3 y 8 tornillos M3 de 8mm
+**Iniciar Bucle Principal**:El programa del Arduino entra en un ciclo de ejecución continuo. Este bucle es crucial, ya que permite que el circuito opere de forma autónoma y reactiva.Leer Distancia del Sensor 1, 2, 3:Dentro del bucle principal, cada sensor ultrasónico realiza una lectura de distancia. Estas lecturas son fundamentales para la detección de objetos.Obstáculo Detectado?
 
-Piezas impresas para servo grande: “B_Front-Bars-Upper L”, “B_Front-Bars-Upper_R”, “B_Front-Frame”, “B_Servo-Arm”, “B_Steering_L” y “B_Steering_R”
-
-Piezas impresas comunes para las dos versiones de bloque delantero: “Front-Bars-Lower” y ejes delanteros del Paso 3
-
-Bloque delantero B. Encajamos las 8 tuercas M3 en los huecos que tiene “B_Front-Frame”. Por otro lado unimos los 2 ejes delanteros a “Front-Bars-Lower” con 2 tornillos M3 de 8mm y colocamos “B-Front-Frame” encima pero sin atornillar. Seguidamente colocamos “B_Front-Bars-Upper_L” y “B_Front-Bars-Upper_R” atornillandolas solamente a los ejes laterales. Por otro lado preparamos el brazo del servo uniendo “B_Steering_L” y “B_Steering_R” a “B_Servo-Arm” con dos tornillos M3 de 8mm. Unimos este conjunto al brazo del servo y lo encajamos todo por el hueco superior de “B_Front-Frame”. Ahora fijamos el servo en su sitio con 4 tornillos M3 de 8mm y unimos los brazos de dirección “B_Steering_L” y “B_Steering_R” a los ejes con otros dos tornillos M3 de 8mm
-
-
-[![](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_04B-1-1536x864.jpg)](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_04B-1-1536x864.jpg)
-
-[![](https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_04B-2-1536x864.jpg)](http://https://dukedoks.com/wp-content/uploads/2024/05/Instrucciones_01_DKS-Basic_04B-2-1536x864.jpg)
+Este es un punto de decisión crítico. El sistema procesa las lecturas de los sensores para determinar si hay algún objeto dentro de un rango de proximidad que requiera una acción.Sí Si se identifica un obstáculo Mover Servo Motor El servo motor ajusta su posición. Esto podría ser para reorientar un sensor, activar una parte móvil o iniciar una acción de evasión.Controlar Motor DC a Través del Controlador: El motor DC se activa o se le da una instrucción (por ejemplo, avanzar, detenerse, retroceder, girar) para reaccionar al obstáculo.Esperar / Retrasar: Una breve pausa permite que las acciones iniciadas se completen o para estabilizar el sistema antes de la siguiente iteración de lectura.No: Si no se detectan obstáculos, el sistema simplemente continúa su proceso de monitoreo.Bucle Independientemente del resultado de la detección de obstáculos, el flujo regresa al paso de lectura de distancias. Esto asegura un monitoreo constante del entorno y una capacidad de respuesta en tiempo real del circuito.
