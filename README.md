@@ -180,7 +180,7 @@ nentes:
 
 Diagrama de conexiones del sistema eléctrico.
 
-![WhatsApp Image 2025-06-11 at 10 56 48](https://github.com/user-attachments/assets/8278f2ae-6345-4587-8400-c9dcccde1bad)
+![circuit_image](https://github.com/user-attachments/assets/2e3a6b02-0ed8-4931-bf9c-d51e61286a32)
 
 Para el diagrama de coneccion que se uso cirkit desirgner para poder realiza una coneccion visual de donde van los pines y como va a ir cableado todo el sistema electrico y como se compone a la hora de armar 
 **Partes mecánicas de conexión a las ruedas**
