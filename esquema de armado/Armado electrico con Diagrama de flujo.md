@@ -1,5 +1,5 @@
 
-## **diagrama electrico**
+## **Diagrama Electrico**
 
 ![circuit_image](https://github.com/user-attachments/assets/2e3a6b02-0ed8-4931-bf9c-d51e61286a32)
 
