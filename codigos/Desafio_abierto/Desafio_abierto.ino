@@ -1,5 +1,7 @@
 #include <Servo.h>
 #include <math.h> // Para la función cos() y radians()
+#include <Wire.h> // Requerida para comunicación I2C
+#include <LiquidCrystal_I2C.h> // Librería para pantallas LCD I2C
 
 // --- Pines de Hardware ---
 #define SW_ARRANQUE 2     // Pin para el botón de arranque (con pull-up interno)
@@ -19,9 +21,9 @@
 #define ANGULO_MAX_GIRO 38 // Máximo ángulo de giro para el servo (e.g., 38 grados a cada lado del centro)
 // Los ángulos de giro se calculan dinámicamente en setSteeringAngle para mayor flexibilidad.
 
-#define DISTANCIA_PARADA_FRONTA 60 // Distancia en cm para detenerse frente a un muro (al inicio y en cualquier obstáculo)
-#define DISTANCIA_SEGURA 200        // Distancia en cm a partir de la cual la velocidad comienza a reducirse
-#define DISTANCIA_DESEADA_PARED_FIJA 20 // Distancia deseada al muro exterior fijo para el control PID (en cm)
+#define DISTANCIA_PARADA_FRONTA 40 // Distancia en cm para detenerse frente a un muro (al inicio y en cualquier obstáculo)
+#define DISTANCIA_SEGURA 60        // Distancia en cm a partir de la cual la velocidad comienza a reducirse
+#define DISTANCIA_DESEADA_PARED_FIJA 30 // Distancia deseada al muro exterior fijo para el control PID (en cm)
 #define UMBRAL_DETECCION_ESQUINA 100 // Distancia en cm que indica una 'apertura' en el sensor lateral para detectar esquina
 #define UMBRAL_RECTA_SIMILARIDAD 5.0 // Umbral en cm para considerar que las paredes laterales son paralelas (fin de giro)
 
@@ -35,8 +37,14 @@
 #define VELOCIDAD_MINIMA 50  // Velocidad mínima del motor para movimiento
 #define VELOCIDAD_GIRO 100   // Velocidad del motor al girar en una esquina
 
+// --- Configuración LCD I2C ---
+#define LCD_ADDR 0x27    // Dirección I2C común para LCDs (0x27 o 0x3F son las más comunes)
+#define LCD_COLS 16      // Número de columnas de tu LCD (ej. 16 o 20)
+#define LCD_ROWS 2       // Número de filas de tu LCD (ej. 2 o 4)
+
 // --- Variables Globales ---
 Servo miServo; // Objeto servo
+LiquidCrystal_I2C lcd(LCD_ADDR, LCD_COLS, LCD_ROWS); // Objeto LCD
 
 // Lecturas de los sensores ultrasónicos
 float frontal_dist;
@@ -77,6 +85,7 @@ void controlPID();
 void detectarYContarEsquina();
 void manejarEsquina();
 void ajustarVelocidadEnRecta();
+void displayLCD(String line1, String line2); // Función para mostrar en LCD de 2 líneas
 
 // --- Configuración Inicial ---
 void setup() {
@@ -105,6 +114,12 @@ void setup() {
   // Iniciar comunicación serial para depuración
   Serial.begin(9600);
   Serial.println("Sistema iniciado. Esperando boton de arranque...");
+
+  // Inicializar LCD
+  lcd.init();      // Inicializar la pantalla LCD
+  lcd.backlight(); // Encender la luz de fondo del LCD
+  displayLCD("Robot Iniciado", "Esperando boton");
+  delay(2000);
 }
 
 // --- Bucle Principal ---
@@ -113,6 +128,7 @@ void loop() {
   if (digitalRead(SW_ARRANQUE) == LOW) { // Si el botón está presionado (LOW por pull-up)
     if (!iniciado) {
       Serial.println("Boton de arranque presionado. Iniciando desafio.");
+      displayLCD("Boton Presionado", "Iniciando...");
       delay(500); // Antirebote
       iniciado = true; // El robot ha iniciado
       detenerCompletamente = false; // Reiniciar estado de detención
@@ -125,28 +141,42 @@ void loop() {
     derecha_dist = leerUltrasonico(TRIG_DERECHO, ECHO_DERECHO);
     izquierda_dist = leerUltrasonico(TRIG_IZQUIERDO, ECHO_IZQUIERDO);
 
-    // Imprimir lecturas para depuración
+    // Imprimir lecturas para depuración en Serial Monitor
     Serial.print("Frontal: "); Serial.print(frontal_dist);
     Serial.print(" Derecha: "); Serial.print(derecha_dist);
     Serial.print(" Izquierda: "); Serial.println(izquierda_dist);
+
+    // Actualizar LCD con lecturas principales y estado
+    if (!enFaseDeGiro && direccionActual != DESCONOCIDA) { // Si está en recta
+      float corrected_izquierda = getCorrectedLateralDistance(izquierda_dist, currentSteeringAngle);
+      float corrected_derecha = getCorrectedLateralDistance(derecha_dist, currentSteeringAngle);
+      
+      String distsLCD = "F:" + String(int(frontal_dist)) + " I:" + String(int(corrected_izquierda));
+      String stateLCD = "D:" + String(int(corrected_derecha)) + " Laps:" + String(seccionesEsquinaPasadas/4); // Mostrar vueltas (4 esquinas/vuelta)
+      displayLCD(distsLCD, stateLCD);
+    } else if (direccionActual == DESCONOCIDA) {
+      displayLCD("Detectando dir", "F:" + String(int(frontal_dist)));
+    }
+
 
     // --- Lógica del Desafío ---
 
     // Paso 1: Avanzar hasta el muro inicial y determinar la dirección si aún no se ha hecho
     if (direccionActual == DESCONOCIDA) {
       Serial.println("Avanzando hacia el muro inicial...");
+      displayLCD("Avzndo p/muro", "F:" + String(int(frontal_dist)));
       avanzarHastaMuroInicial(); // Avanza y se detiene
       // Una vez detenido frente al muro, determina la dirección
       determinarDireccionDesafio();
       Serial.print("Direccion del desafio determinada: ");
       if (direccionActual == CLOCKWISE) {
         Serial.println("CLOCKWISE");
+        displayLCD("Dir: CLOCKWISE", "Listos!");
       } else if (direccionActual == COUNTER_CLOCKWISE) {
         Serial.println("COUNTER_CLOCKWISE");
+        displayLCD("Dir: C-CLOCKWIS", "Listos!");
       }
-      // Después de determinar la dirección y el giro inicial, el robot debe empezar a seguir el carril
-      // Podría ser necesario un pequeño avance o ajuste aquí antes del bucle principal de seguimiento.
-      // Por simplicidad, asumimos que el giro de determinarDireccionDesafio lo deja bien posicionado.
+      delay(1000); // Pausa para ver el mensaje
     } else {
       // Si la dirección ya está determinada, el robot está en el ciclo de seguimiento de carril y vueltas
       if (!enFaseDeGiro) { // Solo ajustar velocidad y PID si no está en una fase de giro activa
@@ -159,6 +189,7 @@ void loop() {
     // Comprobar si se han completado las 3 vueltas
     if (seccionesEsquinaPasadas >= MAX_SECCIONES_ESQUINA) {
       Serial.println("3 vueltas completadas! Deteniendo el robot.");
+      displayLCD("3 Vueltas OK!", "Detenido");
       motorParar();
       detenerCompletamente = true; // Detener completamente el robot
       iniciado = false; // Resetear el estado para que no vuelva a entrar en el bucle principal
@@ -166,6 +197,7 @@ void loop() {
   } else if (detenerCompletamente) {
     motorParar(); // Asegurarse de que el motor esté parado
     setSteeringAngle(POS_CENTRO); // Ruedas rectas al finalizar
+    // El mensaje de "Detenido" se mantiene en el LCD del bloque anterior
     delay(100); // Pequeña pausa para no saturar el serial
   }
 }
@@ -253,15 +285,12 @@ void setSteeringAngle(int angle) {
 // El robot avanza hasta que el sensor frontal detecta un muro a DISTANCIA_PARADA_FRONTA
 // La velocidad es proporcional a la distancia del muro.
 void avanzarHastaMuroInicial() {
-  // TODO: El usuario ya ha marcado esta función para revisión. La lógica actual es de
-  // velocidad proporcional a la distancia frontal y detención.
-  // Esto ya cumple con "velocidad en los tramos rectos sea proporcional a la distancia de la pared y se detenga a la distancia especificada"
-  // para el contexto de un muro frontal.
   float velActual;
 
   while (frontal_dist > DISTANCIA_PARADA_FRONTA) {
     frontal_dist = leerUltrasonico(TRIG_FRONTAL, ECHO_FRONTAL);
     Serial.print("Avanzando... Frontal: "); Serial.println(frontal_dist);
+    displayLCD("Avzndo p/muro", "F:" + String(int(frontal_dist)));
 
     // Ajustar velocidad: más rápido cuando está lejos, más lento cuando está cerca
     // Mapea la distancia frontal desde DISTANCIA_SEGURA hasta DISTANCIA_PARADA_FRONTA
@@ -275,6 +304,7 @@ void avanzarHastaMuroInicial() {
   }
   motorParar(); // Detener completamente al alcanzar la distancia de parada
   Serial.println("Detenido frente al muro inicial.");
+  displayLCD("Muro frontal!", "DETENIDO");
   delay(1000); // Pausa para estabilizar después de la parada
 }
 
@@ -287,6 +317,8 @@ void determinarDireccionDesafio() {
 
   Serial.print("Determinado direccion: Derecha: "); Serial.print(derecha_dist);
   Serial.print(", Izquierda: "); Serial.println(izquierda_dist);
+  displayLCD("Determ. Dir...", "Der:" + String(int(derecha_dist)) + " Izq:" + String(int(izquierda_dist)));
+  delay(1000);
 
   float diferencia = abs(derecha_dist - izquierda_dist);
   float margen_error_ultrasonico = 10.0; // Margen para la precisión del sensor
@@ -295,18 +327,20 @@ void determinarDireccionDesafio() {
     if (derecha_dist > izquierda_dist) {
       direccionActual = CLOCKWISE;
       Serial.println("Direccion: CLOCKWISE");
+      displayLCD("Dir: CLOCKWISE", "Listo para girar");
       setSteeringAngle(POS_CENTRO + ANGULO_MAX_GIRO + 10); // Preparar para el giro inicial a la derecha (ajuste fino +10)
     } else {
       direccionActual = COUNTER_CLOCKWISE;
       Serial.println("Direccion: COUNTER_CLOCKWISE");
+      displayLCD("Dir: C-CLOCKWIS", "Listo para girar");
       setSteeringAngle(POS_CENTRO - ANGULO_MAX_GIRO); // Preparar para el giro inicial a la izquierda
     }
-    // No avanzamos aquí, la primera 'manejarEsquina' o el ciclo principal lo hará.
   } else {
     Serial.println("No se pudo determinar la direccion del desafio, reintentando...");
-    // Considerar un comportamiento de respaldo si la dirección no se puede determinar.
-    // Por ahora, se mantendrá en DESCONOCIDA y el bucle principal intentará de nuevo.
+    displayLCD("Error Dir!", "Reintentando...");
+    // Podrías añadir lógica para reintentar o mover ligeramente el robot aquí si la detección falla.
   }
+  delay(1000); // Pausa para que el mensaje sea visible
 }
 
 // Control PID para mantener el robot en el centro del carril
@@ -370,6 +404,7 @@ void controlPID() {
   Serial.print("Error PID: "); Serial.print(error);
   Serial.print(", Corr: "); Serial.print(correccion);
   Serial.print(", Angulo Servo: "); Serial.println(anguloServo);
+  // La información del PID se mostrará en el LCD a través de las lecturas principales en loop().
 }
 
 // Detecta el paso por una sección de esquina y actualiza el contador de vueltas.
@@ -395,12 +430,15 @@ void detectarYContarEsquina() {
   
   if (esEsquinaDetectada && enTramoRectoPrevioEsquina && !enFaseDeGiro) {
     Serial.println("¡Potencial esquina detectada! Iniciando manejo de esquina...");
+    displayLCD("Esquina det!", "Inic. Giro");
     enFaseDeGiro = true; // Entrar en fase de giro
     enTramoRectoPrevioEsquina = false; // Resetear para la siguiente esquina
     manejarEsquina(); // Ejecutar la lógica de giro
     // Después de manejar la esquina, el robot ya debería estar en la siguiente recta, listo para PID.
     seccionesEsquinaPasadas++;
     Serial.print("Esquina completada. Secciones pasadas: "); Serial.println(seccionesEsquinaPasadas);
+    displayLCD("Giro OK!", "Esquinas:" + String(seccionesEsquinaPasadas));
+    delay(1000); // Pausa para ver el mensaje
     enFaseDeGiro = false; // Salir de la fase de giro una vez que se completó
   } else if (!esEsquinaDetectada && !enTramoRectoPrevioEsquina && !enFaseDeGiro) {
     // Una vez que el robot ha salido de la esquina y no está en fase de giro
@@ -410,21 +448,24 @@ void detectarYContarEsquina() {
 }
 
 /**
- * TODO: el robot debe girar las ruedas de la direccion y entonces empezar a moverse, el giro de la esquina termina cuando el sensor ultrasonico adelante no 
- * tiene obstaculos y ambos sensores ultrasonicos, izquierdo y derecho tienen paredes a los lados, puede usarse el umbral de error para comparar.
+ * @brief Maneja el giro en una esquina. El robot gira las ruedas y avanza hasta que los sensores
+ * indican que ha completado la curva y ha entrado en una nueva sección recta.
  */
 void manejarEsquina() {
   Serial.println("Manejando esquina...");
+  displayLCD("Manejando Esq.", "Movimiento...");
   motorParar(); // Detener brevemente antes de iniciar el giro o ajustar el ángulo
-  delay(100); // Pequeña pausa para estabilizar
+  delay(200); // Pequeña pausa para estabilizar
 
   // 1. Girar las ruedas a la dirección correcta para la curva
   if (direccionActual == CLOCKWISE) {
     setSteeringAngle(POS_CENTRO + ANGULO_MAX_GIRO); // Ángulo para giro a la derecha
     Serial.println("Girando ruedas a la derecha...");
+    displayLCD("Giro a DER", "Vel:" + String(VELOCIDAD_GIRO));
   } else if (direccionActual == COUNTER_CLOCKWISE) {
     setSteeringAngle(POS_CENTRO - ANGULO_MAX_GIRO); // Ángulo para giro a la izquierda
     Serial.println("Girando ruedas a la izquierda...");
+    displayLCD("Giro a IZQ", "Vel:" + String(VELOCIDAD_GIRO));
   }
   delay(500); // Dar tiempo al servo para alcanzar la posición
 
@@ -450,6 +491,9 @@ void manejarEsquina() {
     Serial.print("Girando... Frontal: "); Serial.print(frontal_dist);
     Serial.print(", C_Der: "); Serial.print(corrected_derecha);
     Serial.print(", C_Izq: "); Serial.println(corrected_izquierda);
+    // Actualizar LCD durante el giro
+    displayLCD("Giro en prog.", "F:" + String(int(frontal_dist)) + " S:" + String(int(currentSteeringAngle)));
+
 
     // Condición de salida del giro:
     // 1. Camino frontal despejado (ya no está 'pegado' al muro de la esquina)
@@ -460,6 +504,7 @@ void manejarEsquina() {
         corrected_izquierda < UMBRAL_DETECCION_ESQUINA && corrected_izquierda > (DISTANCIA_DESEADA_PARED_FIJA / 2) &&
         abs(corrected_derecha - corrected_izquierda) < UMBRAL_RECTA_SIMILARIDAD) {
       Serial.println("Fin del giro detectado: En nueva recta.");
+      displayLCD("Giro terminado", "Recta Adelante!");
       break; // Salir del bucle de giro
     }
     delay(50); // Pequeña pausa
@@ -467,6 +512,7 @@ void manejarEsquina() {
   
   if (millis() - tiempoInicioGiro >= TIMEOUT_GIRO) {
     Serial.println("Timeout en el giro. Puede que no haya detectado el fin de la esquina correctamente.");
+    displayLCD("Giro Timeout!", "Checar sensores");
   }
 
   motorParar(); // Detener al final del giro para asegurar la estabilidad
@@ -475,30 +521,33 @@ void manejarEsquina() {
 }
 
 /**
- * TODO: Ajustar la función
- * la velocidad del robot debe ser proporcional a la distancia y debe detenerse frente al muro a la distancia segura para así cruzar
+ * @brief Ajusta la velocidad del robot en los tramos rectos.
+ * La velocidad es proporcional a la distancia del muro frontal, disminuyendo a medida que se acerca.
  */
 void ajustarVelocidadEnRecta() {
-  // Esta función controla la velocidad general del robot en tramos rectos.
-  // La velocidad es inversamente proporcional a la distancia del muro frontal:
-  // más rápido cuando el camino está libre, y disminuye progresivamente si se detecta un obstáculo frontal.
-  // La detención completa en DISTANCIA_PARADA_FRONTA es manejada implícitamente por el loop principal
-  // que llama a esta función y luego chequea si frontal_dist > DISTANCIA_PARADA_FRONTA.
-  // Si frontal_dist es <= DISTANCIA_PARADA_FRONTA, el robot debería haberse detenido o estar a punto de hacerlo.
-
   if (frontal_dist > DISTANCIA_PARADA_FRONTA) {
-    // Mapear la distancia frontal a un valor de velocidad.
-    // Si frontal_dist es VELOCIDAD_SEGURA, la velocidad será VELOCIDAD_MAXIMA.
-    // Si frontal_dist es DISTANCIA_PARADA_FRONTA, la velocidad será VELOCIDAD_MINIMA.
     int velocidadAdaptativa = map(frontal_dist, DISTANCIA_PARADA_FRONTA, DISTANCIA_SEGURA, VELOCIDAD_MINIMA, VELOCIDAD_MAXIMA);
-    
-    // Asegurar que la velocidad esté dentro de los límites definidos
     velocidadAdaptativa = constrain(velocidadAdaptativa, VELOCIDAD_MINIMA, VELOCIDAD_MAXIMA);
     motorDelante(velocidadAdaptativa);
     Serial.print("Velocidad adaptativa en recta: "); Serial.println(velocidadAdaptativa);
+    // Ya se muestra en loop() las distancias y estado, la velocidad se infiere del movimiento.
   } else {
-    // Si la distancia frontal es igual o menor a DISTANCIA_PARADA_FRONTA, detenerse.
     motorParar(); 
     Serial.println("Muro frontal detectado, deteniendo en ajustarVelocidadEnRecta.");
+    displayLCD("Muro! Reducir", "Frente:" + String(int(frontal_dist)));
+    delay(500); // Pequeña pausa para ver el mensaje de detención
   }
+}
+
+/**
+ * @brief Muestra mensajes en la pantalla LCD I2C.
+ * @param line1 El texto a mostrar en la primera línea.
+ * @param line2 El texto a mostrar en la segunda línea.
+ */
+void displayLCD(String line1, String line2) {
+  lcd.clear(); // Limpia la pantalla antes de escribir
+  lcd.setCursor(0, 0); // Establece el cursor en la primera columna, primera fila
+  lcd.print(line1);
+  lcd.setCursor(0, 1); // Establece el cursor en la primera columna, segunda fila
+  lcd.print(line2);
 }
