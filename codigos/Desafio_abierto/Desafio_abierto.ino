@@ -1,4 +1,5 @@
 #include <Servo.h>
+#include <math.h> // Para la función cos() y radians()
 
 // --- Pines de Hardware ---
 #define SW_ARRANQUE 2     // Pin para el botón de arranque (con pull-up interno)
@@ -15,14 +16,14 @@
 
 // --- Parámetros de Calibración y Comportamiento ---
 #define POS_CENTRO 94      // Ángulo del servo para ir recto (ajustar si es necesario)
-#define ANGULO_GIRO_DERECHA POS_CENTRO + ANGULO_MAX_GIRO + 10 // Ángulo para girar a la derecha
-#define ANGULO_GIRO_IZQUIERDA POS_CENTRO - ANGULO_MAX_GIRO // Ángulo para girar a la izquierda
-#define ANGULO_MAX_GIRO 38 // Máximo ángulo de giro para el servo (e.g., 30 grados a cada lado del centro)
+#define ANGULO_MAX_GIRO 38 // Máximo ángulo de giro para el servo (e.g., 38 grados a cada lado del centro)
+// Los ángulos de giro se calculan dinámicamente en setSteeringAngle para mayor flexibilidad.
 
-#define DISTANCIA_PARADA_FRONTA 20 // Distancia en cm para detenerse frente a un muro
-#define DISTANCIA_SEGURA 60        // Distancia en cm para reducir la velocidad (usado en el avance inicial)
-#define DISTANCIA_DESEADA_PARED_FIJA 30 // Distancia deseada al muro exterior fijo para el control PID (en cm)
+#define DISTANCIA_PARADA_FRONTA 60 // Distancia en cm para detenerse frente a un muro (al inicio y en cualquier obstáculo)
+#define DISTANCIA_SEGURA 200        // Distancia en cm a partir de la cual la velocidad comienza a reducirse
+#define DISTANCIA_DESEADA_PARED_FIJA 20 // Distancia deseada al muro exterior fijo para el control PID (en cm)
 #define UMBRAL_DETECCION_ESQUINA 100 // Distancia en cm que indica una 'apertura' en el sensor lateral para detectar esquina
+#define UMBRAL_RECTA_SIMILARIDAD 5.0 // Umbral en cm para considerar que las paredes laterales son paralelas (fin de giro)
 
 // --- Constantes PID para control de dirección ---
 #define KP 0.8  // Ganancia Proporcional (ajustar)
@@ -42,9 +43,13 @@ float frontal_dist;
 float derecha_dist;
 float izquierda_dist;
 
+// Almacena el ángulo actual del servo para corrección trigonométrica
+int currentSteeringAngle = POS_CENTRO; 
+
 // Variables de estado del robot
 bool detenerCompletamente = false;
 bool iniciado = false; // Bandera para saber si el robot ha iniciado el desafío
+bool enFaseDeGiro = false; // Indica si el robot está actualmente ejecutando un giro de esquina
 
 // Variables para el control de vueltas
 int seccionesEsquinaPasadas = 0;
@@ -61,6 +66,7 @@ unsigned long tiempoAnteriorPID = 0;
 
 // --- Prototipos de Funciones ---
 float leerUltrasonico(uint8_t trigPin, uint8_t echoPin);
+float getCorrectedLateralDistance(float raw_distance, int servo_angle_val, float sensor_offset_cm);
 void motorDelante(int velocidad);
 void motorAtras(int velocidad);
 void motorParar();
@@ -143,9 +149,11 @@ void loop() {
       // Por simplicidad, asumimos que el giro de determinarDireccionDesafio lo deja bien posicionado.
     } else {
       // Si la dirección ya está determinada, el robot está en el ciclo de seguimiento de carril y vueltas
-      ajustarVelocidadEnRecta(); // Ajustar velocidad basada en la distancia frontal (generalizado)
-      controlPID();              // Mantenerse en el centro del carril
-      detectarYContarEsquina();  // Detectar y contar esquinas
+      if (!enFaseDeGiro) { // Solo ajustar velocidad y PID si no está en una fase de giro activa
+        ajustarVelocidadEnRecta(); // Ajustar velocidad basada en la distancia frontal (generalizado)
+        controlPID();              // Mantenerse en el centro del carril
+      }
+      detectarYContarEsquina();  // Detectar y contar esquinas (llama a manejarEsquina si detecta)
     }
 
     // Comprobar si se han completado las 3 vueltas
@@ -158,7 +166,6 @@ void loop() {
   } else if (detenerCompletamente) {
     motorParar(); // Asegurarse de que el motor esté parado
     setSteeringAngle(POS_CENTRO); // Ruedas rectas al finalizar
-    // Serial.println("Robot detenido. Desafio finalizado."); // Evitar spam en el serial
     delay(100); // Pequeña pausa para no saturar el serial
   }
 }
@@ -175,10 +182,42 @@ float leerUltrasonico(uint8_t trigPin, uint8_t echoPin) {
   long duracion = pulseIn(echoPin, HIGH);
   float distanciaCm = duracion * 0.034 / 2;
   // Filtrado simple para lecturas inconsistentes (puede ser necesario un filtro más avanzado)
-  if (distanciaCm == 0 || distanciaCm > 400) { // El sensor suele dar 0 o valores muy altos si no detecta nada
-    return 400; // Un valor grande para indicar que no hay obstáculo cercano
+  if (distanciaCm == 0 || distanciaCm > 400 || distanciaCm < 2) { // El sensor suele dar 0 o valores muy altos/muy bajos si no detecta nada
+    return 400; // Un valor grande para indicar que no hay obstáculo cercano o lectura fuera de rango
   }
   return distanciaCm;
+}
+
+/**
+ * @brief Corrige la distancia leída por un sensor lateral basándose en el ángulo de dirección del servo.
+ * Esto compensa cuando el sensor no está perpendicular a la pared debido a un giro.
+ * @param raw_distance La lectura de distancia cruda del sensor lateral.
+ * @param servo_angle_val El ángulo actual del servo de dirección (currentSteeringAngle).
+ * @param sensor_offset_cm Opcional: distancia del sensor al eje de giro del vehículo. 
+ * (Por simplicidad, en este ejemplo se asume 0, lo cual es una idealización.
+ * Para mayor precisión, mide esta distancia).
+ * @return La distancia estimada corregida a la pared.
+ */
+float getCorrectedLateralDistance(float raw_distance, int servo_angle_val, float sensor_offset_cm = 0.0) {
+  // Calcular el ángulo de desviación del servo respecto al centro.
+  float angle_deviation_degrees = abs(servo_angle_val - POS_CENTRO);
+  
+  // Convertir grados a radianes para la función cos()
+  float angle_deviation_radians = radians(angle_deviation_degrees);
+  
+  // Fórmula trigonométrica simplificada: corrected_dist = raw_dist * cos(ángulo_desviación)
+  // Esto asume que el sensor está en el eje de giro. Si hay un offset, la fórmula es más compleja.
+  float corrected_dist = raw_distance * cos(angle_deviation_radians);
+
+  // Si hay un offset significativo (distancia del sensor al eje de giro en el sentido del avance)
+  // y un ángulo, esto también influye, pero lo omitimos para mantener la complejidad.
+  // Una corrección más completa implicaría:
+  // corrected_dist = (raw_distance - sensor_offset_x * sin(angle_deviation_radians)) * cos(angle_deviation_radians);
+  // O, si el offset es lateral: corrected_dist = raw_distance / cos(angle_deviation_radians) + offset_y * sin(angle_deviation_radians);
+  // Para la mayoría de los casos de uso con sensores laterales montados cerca de las ruedas delanteras,
+  // raw_distance * cos(angle_deviation_radians) es una buena aproximación.
+
+  return corrected_dist;
 }
 
 // Función para mover el motor hacia adelante
@@ -204,7 +243,9 @@ void motorParar() {
 
 // Función para establecer el ángulo del servo de dirección
 void setSteeringAngle(int angle) {
-  miServo.write(constrain(angle, POS_CENTRO - ANGULO_MAX_GIRO, POS_CENTRO + ANGULO_MAX_GIRO)); // Limitar el ángulo
+  // Limitar el ángulo para evitar que el servo exceda sus límites mecánicos
+  currentSteeringAngle = constrain(angle, POS_CENTRO - ANGULO_MAX_GIRO, POS_CENTRO + ANGULO_MAX_GIRO); 
+  miServo.write(currentSteeringAngle);
 }
 
 // --- Funciones de Lógica del Desafío ---
@@ -212,29 +253,27 @@ void setSteeringAngle(int angle) {
 // El robot avanza hasta que el sensor frontal detecta un muro a DISTANCIA_PARADA_FRONTA
 // La velocidad es proporcional a la distancia del muro.
 void avanzarHastaMuroInicial() {
-  motorDelante(VELOCIDAD_MINIMA); // Iniciar con una velocidad mínima constante
-  long ultimaLecturaFrontal = millis(); // Para evitar lecturas muy seguidas
-  float velActual = VELOCIDAD_MAXIMA;
+  // TODO: El usuario ya ha marcado esta función para revisión. La lógica actual es de
+  // velocidad proporcional a la distancia frontal y detención.
+  // Esto ya cumple con "velocidad en los tramos rectos sea proporcional a la distancia de la pared y se detenga a la distancia especificada"
+  // para el contexto de un muro frontal.
+  float velActual;
 
   while (frontal_dist > DISTANCIA_PARADA_FRONTA) {
     frontal_dist = leerUltrasonico(TRIG_FRONTAL, ECHO_FRONTAL);
     Serial.print("Avanzando... Frontal: "); Serial.println(frontal_dist);
 
-    // Ajustar velocidad proporcionalmente a la distancia
-    // Cuanto más cerca, más lento. Usa un mapeo lineal.
-    // De DISTANCIA_SEGURA a DISTANCIA_PARADA_FRONTA, la velocidad irá de VELOCIDAD_MAXIMA a VELOCIDAD_MINIMA.
-    if (frontal_dist < DISTANCIA_SEGURA) {
-      velActual = map(frontal_dist, DISTANCIA_PARADA_FRONTA, DISTANCIA_SEGURA, VELOCIDAD_MINIMA, VELOCIDAD_MAXIMA);
-      velActual = constrain(velActual, VELOCIDAD_MINIMA, VELOCIDAD_MAXIMA); // Asegurar que no baja de min o excede max
-      motorDelante(velActual);
-    } else {
-      motorDelante(VELOCIDAD_MAXIMA); // Velocidad máxima si está lejos del muro
-    }
+    // Ajustar velocidad: más rápido cuando está lejos, más lento cuando está cerca
+    // Mapea la distancia frontal desde DISTANCIA_SEGURA hasta DISTANCIA_PARADA_FRONTA
+    // a un rango de velocidad desde VELOCIDAD_MAXIMA hasta VELOCIDAD_MINIMA.
+    velActual = map(frontal_dist, DISTANCIA_PARADA_FRONTA, DISTANCIA_SEGURA, VELOCIDAD_MINIMA, VELOCIDAD_MAXIMA);
+    velActual = constrain(velActual, VELOCIDAD_MINIMA, VELOCIDAD_MAXIMA); // Asegurar que la velocidad esté dentro del rango definido
+    motorDelante(velActual);
     setSteeringAngle(POS_CENTRO); // Mantener ruedas rectas
 
     delay(50); // Pequeña pausa para lecturas estables
   }
-  motorParar(); // Detener completamente
+  motorParar(); // Detener completamente al alcanzar la distancia de parada
   Serial.println("Detenido frente al muro inicial.");
   delay(1000); // Pausa para estabilizar después de la parada
 }
@@ -249,15 +288,6 @@ void determinarDireccionDesafio() {
   Serial.print("Determinado direccion: Derecha: "); Serial.print(derecha_dist);
   Serial.print(", Izquierda: "); Serial.println(izquierda_dist);
 
-  // La pista es cuadrada. En el punto de inicio (tras la parada frontal), el robot está en una esquina.
-  // Uno de los sensores laterales debería ver una gran distancia (pista abierta), el otro la pared.
-  // Podríamos tener una pista de 600mm o 1000mm de ancho.
-  // Si derecha_dist es significativamente mayor que izquierda_dist, la pista abierta está a la derecha -> giro CW
-  // Si izquierda_dist es significativamente mayor que derecha_dist, la pista abierta está a la izquierda -> giro CCW
-
-  // Se asume que el robot se detiene en el centro del carril al inicio del muro frontal.
-  // Y que los sensores laterales verán una pared y una apertura.
-  // Se necesita un umbral de diferencia para ser significativo.
   float diferencia = abs(derecha_dist - izquierda_dist);
   float margen_error_ultrasonico = 10.0; // Margen para la precisión del sensor
 
@@ -265,38 +295,34 @@ void determinarDireccionDesafio() {
     if (derecha_dist > izquierda_dist) {
       direccionActual = CLOCKWISE;
       Serial.println("Direccion: CLOCKWISE");
-      setSteeringAngle(ANGULO_GIRO_DERECHA); // Preparar para el giro inicial
+      setSteeringAngle(POS_CENTRO + ANGULO_MAX_GIRO + 10); // Preparar para el giro inicial a la derecha (ajuste fino +10)
     } else {
       direccionActual = COUNTER_CLOCKWISE;
       Serial.println("Direccion: COUNTER_CLOCKWISE");
-      setSteeringAngle(ANGULO_GIRO_IZQUIERDA); // Preparar para el giro inicial
+      setSteeringAngle(POS_CENTRO - ANGULO_MAX_GIRO); // Preparar para el giro inicial a la izquierda
     }
-    motorDelante(VELOCIDAD_GIRO); // Avanzar un poco para iniciar el giro
-    delay(500); // Tiempo para ejecutar el giro inicial (ajustar)
-    motorParar();
-    setSteeringAngle(POS_CENTRO); // Volver al centro
+    // No avanzamos aquí, la primera 'manejarEsquina' o el ciclo principal lo hará.
   } else {
-    // Si las distancias son similares, algo no está bien o no es un punto de determinación claro.
-    // Podría significar que está en una recta y no en una esquina detectable de esta manera.
-    // Para este desafío, asumimos que el punto de partida es un muro frontal seguido de una esquina.
     Serial.println("No se pudo determinar la direccion del desafio, reintentando...");
-    // Podría implementar una estrategia de "prueba y error" o mover el robot un poco
+    // Considerar un comportamiento de respaldo si la dirección no se puede determinar.
     // Por ahora, se mantendrá en DESCONOCIDA y el bucle principal intentará de nuevo.
   }
 }
 
-
 // Control PID para mantener el robot en el centro del carril
 void controlPID() {
   float error = 0;
+  float corrected_izquierda_dist = getCorrectedLateralDistance(izquierda_dist, currentSteeringAngle);
+  float corrected_derecha_dist = getCorrectedLateralDistance(derecha_dist, currentSteeringAngle);
+
   // El error se calcula como la diferencia entre la distancia deseada y la distancia actual al muro fijo.
   // El muro fijo es el exterior.
   if (direccionActual == CLOCKWISE) {
     // Si va en sentido horario, el muro fijo está a la izquierda.
-    error = izquierda_dist - DISTANCIA_DESEADA_PARED_FIJA;
+    error = corrected_izquierda_dist - DISTANCIA_DESEADA_PARED_FIJA;
   } else if (direccionActual == COUNTER_CLOCKWISE) {
     // Si va en sentido anti-horario, el muro fijo está a la derecha.
-    error = derecha_dist - DISTANCIA_DESEADA_PARED_FIJA;
+    error = corrected_derecha_dist - DISTANCIA_DESEADA_PARED_FIJA;
   } else {
     // Si la dirección es desconocida, no se aplica PID.
     setSteeringAngle(POS_CENTRO); // Mantener ruedas rectas por defecto.
@@ -305,6 +331,7 @@ void controlPID() {
 
   unsigned long tiempoActualPID = millis();
   float deltaTime = (tiempoActualPID - tiempoAnteriorPID) / 1000.0; // Convertir a segundos
+  if (deltaTime == 0) deltaTime = 0.001; // Evitar division por cero
   tiempoAnteriorPID = tiempoActualPID;
 
   // Componente Proporcional
@@ -325,8 +352,6 @@ void controlPID() {
   float correccion = p_term + i_term + d_term;
 
   // Ajustar el ángulo del servo
-  // Si el error es positivo, el robot está muy lejos del muro fijo, necesita girar hacia el muro fijo.
-  // Si el error es negativo, el robot está muy cerca del muro fijo, necesita girar lejos del muro fijo.
   int anguloServo = POS_CENTRO;
 
   if (direccionActual == CLOCKWISE) {
@@ -342,90 +367,138 @@ void controlPID() {
   }
 
   setSteeringAngle(anguloServo);
-  Serial.print("Error: "); Serial.print(error);
-  Serial.print(", Correccion: "); Serial.print(correccion);
+  Serial.print("Error PID: "); Serial.print(error);
+  Serial.print(", Corr: "); Serial.print(correccion);
   Serial.print(", Angulo Servo: "); Serial.println(anguloServo);
 }
 
 // Detecta el paso por una sección de esquina y actualiza el contador de vueltas.
-// La detección de esquina es crítica y puede requerir ajuste.
-// Una forma simple es detectar cuando un sensor lateral (el que está viendo el muro fijo)
-// de repente ve una distancia muy grande (indicando una apertura o el fin de la pared recta)
-// y el sensor frontal también ve una distancia grande (indicando que puede girar).
 void detectarYContarEsquina() {
   bool esEsquinaDetectada = false;
 
-  // Supongamos que en una esquina, el sensor frontal ve 'infinito' o un valor muy grande
-  // y el sensor lateral que estaba midiendo la pared fija deja de verla o ve una apertura
-  // significativa.
-  // También podríamos usar la distancia del sensor lateral que da al 'vacío' de la pista
-  // Si de repente ve una pared cercana, significa que está saliendo de la curva.
+  // Detección de esquina: uno de los sensores laterales debe ver una apertura (distancia grande)
+  // mientras el frontal está relativamente libre.
+  if (direccionActual == CLOCKWISE) {
+    // Si se mueve CW, la esquina es un giro a la derecha. El sensor derecho debería ver la "apertura".
+    if (derecha_dist > UMBRAL_DETECCION_ESQUINA && frontal_dist > DISTANCIA_PARADA_FRONTA + 10) { 
+      esEsquinaDetectada = true;
+    }
+  } else if (direccionActual == COUNTER_CLOCKWISE) {
+    // Si se mueve CCW, la esquina es un giro a la izquierda. El sensor izquierdo debería ver la "apertura".
+    if (izquierda_dist > UMBRAL_DETECCION_ESQUINA && frontal_dist > DISTANCIA_PARADA_FRONTA + 10) {
+      esEsquinaDetectada = true;
+    }
+  }
+
+  // Lógica para contar la esquina solo una vez por esquina y manejar el giro
+  static bool enTramoRectoPrevioEsquina = true; // Estado para evitar doble conteo y asegurar transición
   
-  // En el Open Challenge, las paredes interiores son móviles. La referencia es el muro fijo exterior.
-  // Cuando el robot entra en una esquina, la distancia al muro exterior debería cambiar de forma predecible.
-  // O el sensor lateral que estaba viendo la pared interior (móvil) de repente ve una gran apertura.
-
-  if (direccionActual == CLOCKWISE) {
-    // Muro fijo a la izquierda. Al entrar a una esquina, la pared derecha debería desaparecer
-    // o el frontal ver una distancia grande para girar a la derecha.
-    if (derecha_dist > UMBRAL_DETECCION_ESQUINA && frontal_dist > DISTANCIA_SEGURA) { // Si hay espacio para girar a la derecha
-      // Y si estaba pegado a la pared izquierda (muro fijo) y de repente la izquierda se abre o la frontal es grande
-      // Es una detección simplificada: si el frontal está libre y el lado opuesto al giro se abre.
-      esEsquinaDetectada = true;
-    }
-  } else if (direccionActual == COUNTER_CLOCKWISE) {
-    // Muro fijo a la derecha. Al entrar a una esquina, la pared izquierda debería desaparecer
-    // o el frontal ver una distancia grande para girar a la izquierda.
-    if (izquierda_dist > UMBRAL_DETECCION_ESQUINA && frontal_dist > DISTANCIA_SEGURA) { // Si hay espacio para girar a la izquierda
-      esEsquinaDetectada = true;
-    }
-  }
-
-  // Lógica para contar la esquina solo una vez por esquina
-  static bool enEsquina = false; // Estado para evitar contar múltiples veces la misma esquina
-  if (esEsquinaDetectada && !enEsquina) {
-    seccionesEsquinaPasadas++;
-    Serial.print("Esquina detectada! Secciones pasadas: "); Serial.println(seccionesEsquinaPasadas);
-    enEsquina = true; // El robot ha entrado en la esquina
+  if (esEsquinaDetectada && enTramoRectoPrevioEsquina && !enFaseDeGiro) {
+    Serial.println("¡Potencial esquina detectada! Iniciando manejo de esquina...");
+    enFaseDeGiro = true; // Entrar en fase de giro
+    enTramoRectoPrevioEsquina = false; // Resetear para la siguiente esquina
     manejarEsquina(); // Ejecutar la lógica de giro
-  } else if (!esEsquinaDetectada && enEsquina) {
-    // El robot ha salido de la esquina, resetear la bandera
-    enEsquina = false;
+    // Después de manejar la esquina, el robot ya debería estar en la siguiente recta, listo para PID.
+    seccionesEsquinaPasadas++;
+    Serial.print("Esquina completada. Secciones pasadas: "); Serial.println(seccionesEsquinaPasadas);
+    enFaseDeGiro = false; // Salir de la fase de giro una vez que se completó
+  } else if (!esEsquinaDetectada && !enTramoRectoPrevioEsquina && !enFaseDeGiro) {
+    // Una vez que el robot ha salido de la esquina y no está en fase de giro
+    // y los sensores ya no detectan una esquina, se considera que está en una recta de nuevo.
+    enTramoRectoPrevioEsquina = true; 
   }
 }
 
-// Ejecuta el giro en la esquina
+/**
+ * TODO: el robot debe girar las ruedas de la direccion y entonces empezar a moverse, el giro de la esquina termina cuando el sensor ultrasonico adelante no 
+ * tiene obstaculos y ambos sensores ultrasonicos, izquierdo y derecho tienen paredes a los lados, puede usarse el umbral de error para comparar.
+ */
 void manejarEsquina() {
-  motorDelante(VELOCIDAD_GIRO); // Velocidad reducida para el giro
+  Serial.println("Manejando esquina...");
+  motorParar(); // Detener brevemente antes de iniciar el giro o ajustar el ángulo
+  delay(100); // Pequeña pausa para estabilizar
+
+  // 1. Girar las ruedas a la dirección correcta para la curva
   if (direccionActual == CLOCKWISE) {
-    setSteeringAngle(ANGULO_GIRO_DERECHA);
+    setSteeringAngle(POS_CENTRO + ANGULO_MAX_GIRO); // Ángulo para giro a la derecha
+    Serial.println("Girando ruedas a la derecha...");
   } else if (direccionActual == COUNTER_CLOCKWISE) {
-    setSteeringAngle(ANGULO_GIRO_IZQUIERDA);
+    setSteeringAngle(POS_CENTRO - ANGULO_MAX_GIRO); // Ángulo para giro a la izquierda
+    Serial.println("Girando ruedas a la izquierda...");
+  }
+  delay(500); // Dar tiempo al servo para alcanzar la posición
+
+  motorDelante(VELOCIDAD_GIRO); // Moverse a velocidad reducida durante el giro
+
+  // 2. Esperar a que el robot complete el giro basándose en las lecturas de los sensores
+  // El giro termina cuando:
+  // a) El sensor frontal no detecta obstáculos cercanos (el camino está despejado)
+  // b) Ambos sensores laterales (corregidos) detectan paredes a una distancia similar y razonable,
+  //    indicando que el robot ha entrado en una nueva sección recta.
+
+  unsigned long tiempoInicioGiro = millis();
+  const long TIMEOUT_GIRO = 5000; // Timeout para evitar bucles infinitos (5 segundos)
+
+  while (millis() - tiempoInicioGiro < TIMEOUT_GIRO) {
+    frontal_dist = leerUltrasonico(TRIG_FRONTAL, ECHO_FRONTAL);
+    derecha_dist = leerUltrasonico(TRIG_DERECHO, ECHO_DERECHO);
+    izquierda_dist = leerUltrasonico(TRIG_IZQUIERDO, ECHO_IZQUIERDO);
+
+    float corrected_derecha = getCorrectedLateralDistance(derecha_dist, currentSteeringAngle);
+    float corrected_izquierda = getCorrectedLateralDistance(izquierda_dist, currentSteeringAngle);
+
+    Serial.print("Girando... Frontal: "); Serial.print(frontal_dist);
+    Serial.print(", C_Der: "); Serial.print(corrected_derecha);
+    Serial.print(", C_Izq: "); Serial.println(corrected_izquierda);
+
+    // Condición de salida del giro:
+    // 1. Camino frontal despejado (ya no está 'pegado' al muro de la esquina)
+    // 2. Ambos lados detectan paredes a una distancia razonable (está en el carril)
+    // 3. Las distancias laterales corregidas son "similares" (ha enderezado y está en una recta)
+    if (frontal_dist > DISTANCIA_SEGURA && 
+        corrected_derecha < UMBRAL_DETECCION_ESQUINA && corrected_derecha > (DISTANCIA_DESEADA_PARED_FIJA / 2) &&
+        corrected_izquierda < UMBRAL_DETECCION_ESQUINA && corrected_izquierda > (DISTANCIA_DESEADA_PARED_FIJA / 2) &&
+        abs(corrected_derecha - corrected_izquierda) < UMBRAL_RECTA_SIMILARIDAD) {
+      Serial.println("Fin del giro detectado: En nueva recta.");
+      break; // Salir del bucle de giro
+    }
+    delay(50); // Pequeña pausa
+  }
+  
+  if (millis() - tiempoInicioGiro >= TIMEOUT_GIRO) {
+    Serial.println("Timeout en el giro. Puede que no haya detectado el fin de la esquina correctamente.");
   }
 
-  // Ejecutar el giro por un tiempo determinado o hasta que los sensores indiquen el fin de la curva.
-  // Para una implementación robusta, esto debería basarse en lecturas de sensores (frontal ve pared, lateral ve pared).
-  // Por simplicidad, un delay fijo:
-  Serial.println("Manejando esquina...");
-  delay(800); // Tiempo de giro (ajustar según el robot y la curva)
-
+  motorParar(); // Detener al final del giro para asegurar la estabilidad
   setSteeringAngle(POS_CENTRO); // Volver las ruedas rectas
-  motorDelante(VELOCIDAD_MAXIMA); // Acelerar para la recta siguiente
-  delay(200); // Pequeño avance post-giro
+  delay(200); // Pequeña pausa antes de continuar
 }
 
-// Ajusta la velocidad en los tramos rectos proporcional a la distancia del muro frontal.
-// Esto podría ser útil para desacelerar si hay un obstáculo inesperado o si se acerca a un muro.
-// Sin embargo, para tramos rectos normales de carril, una velocidad constante puede ser mejor.
-// La interpretación del usuario "velocidad en los tramos rectos sea proporcional a la distancia de la pared"
-// se aplica aquí como una 'velocidad adaptativa' al frontal más que un control de velocidad constante.
+/**
+ * TODO: Ajustar la función
+ * la velocidad del robot debe ser proporcional a la distancia y debe detenerse frente al muro a la distancia segura para así cruzar
+ */
 void ajustarVelocidadEnRecta() {
-  // Si el sensor frontal detecta un muro cercano, reducir la velocidad.
-  if (frontal_dist < DISTANCIA_SEGURA) {
+  // Esta función controla la velocidad general del robot en tramos rectos.
+  // La velocidad es inversamente proporcional a la distancia del muro frontal:
+  // más rápido cuando el camino está libre, y disminuye progresivamente si se detecta un obstáculo frontal.
+  // La detención completa en DISTANCIA_PARADA_FRONTA es manejada implícitamente por el loop principal
+  // que llama a esta función y luego chequea si frontal_dist > DISTANCIA_PARADA_FRONTA.
+  // Si frontal_dist es <= DISTANCIA_PARADA_FRONTA, el robot debería haberse detenido o estar a punto de hacerlo.
+
+  if (frontal_dist > DISTANCIA_PARADA_FRONTA) {
+    // Mapear la distancia frontal a un valor de velocidad.
+    // Si frontal_dist es VELOCIDAD_SEGURA, la velocidad será VELOCIDAD_MAXIMA.
+    // Si frontal_dist es DISTANCIA_PARADA_FRONTA, la velocidad será VELOCIDAD_MINIMA.
     int velocidadAdaptativa = map(frontal_dist, DISTANCIA_PARADA_FRONTA, DISTANCIA_SEGURA, VELOCIDAD_MINIMA, VELOCIDAD_MAXIMA);
-    motorDelante(constrain(velocidadAdaptativa, VELOCIDAD_MINIMA, VELOCIDAD_MAXIMA));
-    Serial.print("Velocidad adaptativa: "); Serial.println(velocidadAdaptativa);
+    
+    // Asegurar que la velocidad esté dentro de los límites definidos
+    velocidadAdaptativa = constrain(velocidadAdaptativa, VELOCIDAD_MINIMA, VELOCIDAD_MAXIMA);
+    motorDelante(velocidadAdaptativa);
+    Serial.print("Velocidad adaptativa en recta: "); Serial.println(velocidadAdaptativa);
   } else {
-    motorDelante(VELOCIDAD_MAXIMA); // Velocidad máxima si el camino está libre
+    // Si la distancia frontal es igual o menor a DISTANCIA_PARADA_FRONTA, detenerse.
+    motorParar(); 
+    Serial.println("Muro frontal detectado, deteniendo en ajustarVelocidadEnRecta.");
   }
 }
