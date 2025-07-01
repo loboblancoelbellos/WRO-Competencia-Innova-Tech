@@ -67,7 +67,7 @@ Lista detallada de los componentes utilizados:
 - **Batería de litio 18650 (3 UND)**
 - **Puente H L298N**
 - **Sensor de ultrasonido de distancia Arduino HC-SR04 (3 UND)**
-- **Controlador de velocidad PWM motores DC 4.5V-35V 5A 90W**
+
 
 
 **Servo motor FUTABA S3003**
