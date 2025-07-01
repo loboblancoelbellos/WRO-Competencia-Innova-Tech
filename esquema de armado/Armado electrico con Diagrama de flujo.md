@@ -7,24 +7,7 @@
 
 ## Diagrama de Flujo del CircuitoEste documento presenta un diagrama de flujo que ilustra la lógica operativa de un circuito, basado en la imagen de referencia proporcionada.
 
-    A[Inicio] --> B{Encendido};
-    B --> C[Verificar Voltaje de Batería];
-    C -- Voltaje OK --> D[Inicializar Arduino UNO];
-    C -- Voltaje Bajo --> E[Indicar Batería Baja / Apagar];
-    D --> F[Inicializar Sensores Ultrasónicos];
-    F --> G[Inicializar Servo Motor];
-    F --> H[Inicializar Controlador de Motor];
-    G --> I[Iniciar Bucle Principal];
-    I --> J[Leer Distancia del Sensor 1];
-    J --> K[Leer Distancia del Sensor 2];
-    J --> L[Leer Distancia del Sensor 3];
-    K --> M{Obstáculo Detectado?};
-    M -- Sí --> N[Mover Servo Motor];
-    N --> O[Controlar Motor DC a Través del Controlador];
-    M -- No --> P[Continuar Monitoreando];
-    O --> Q[Esperar / Retrasar];
-    Q --> I;
-    P --> I;
+![deepseek_mermaid_20250701_024ec3](https://github.com/user-attachments/assets/9b1d6061-c6c6-4658-8a7c-6a6c82493b0b)
 
 
 **Explicación Detallada del Diagrama de Flujo**:El diagrama de flujo desglosa los pasos inferidos del funcionamiento del circuito:Inicio:Representa el punto de partida para la secuencia de operaciones del circuito.
