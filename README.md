@@ -70,7 +70,7 @@ Lista detallada de los componentes utilizados:
 - **Controlador de velocidad PWM motores DC 4.5V-35V 5A 90W**
 
 
-**Servo motor Rev robotics REV-41-1097**
+**Servo motor FUTABA S3003**
 
 [![servomotor ](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCsksBOFdDB5BY8tKZa6eUbbB8zCaAIml6zw&s "servomotor ")](http://https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCsksBOFdDB5BY8tKZa6eUbbB8zCaAIml6zw&s "servomotor ")
 
