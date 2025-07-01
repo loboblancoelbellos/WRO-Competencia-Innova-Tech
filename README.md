@@ -68,7 +68,7 @@ Lista detallada de los componentes utilizados:
 - **Puente H L298N**
 - **Sensor de ultrasonido de distancia Arduino HC-SR04 (3 UND)**
 - **Controlador de velocidad PWM motores DC 4.5V-35V 5A 90W**
--**Sensor de color TCS3200**
+
 
 **Servo motor Rev robotics REV-41-1097**
 
@@ -92,47 +92,39 @@ Desventajas:
 
 3. Voltaje crítico: Requiere regulación precisa (recomendado 6V con UBEC)
 
-**Arduino Mega 2560**
+**Arduino uno**
 
-![descarga](https://github.com/user-attachments/assets/63b1213b-3a6c-4e2e-802f-76436bbadba5)
+![Arduino1-3](https://github.com/user-attachments/assets/68743773-d612-4e50-b748-177711cdb51a)
+
 
 El Arduino Mega 2560 es una placa de desarrollo basada en el microcontrolador ATmega2560, diseñada para proyectos que requieren más pines de E/S y memoria que modelos como el Arduino Uno. Es ampliamente utilizado en robótica, automatización y sistemas de control complejos.
 
-Ventajas:
+✅ 3 Ventajas del Arduino Uno
+Fácil de usar y aprender
 
-1. Múltiples I/O: 54 pines digitales y 16 analógicos .
+Ideal para principiantes gracias a su entorno de desarrollo intuitivo y abundante documentación.
 
-2. Compatibilidad: Soporta librerías para sensores (TCS3200, HC-SR04).
+Gran comunidad y soporte
 
-3. Comunidad amplia: Documentación extensa y ejemplos de código.
+Miles de tutoriales, foros y ejemplos disponibles para resolver dudas y compartir proyectos.
 
-Desventajas:
+Compatible con muchos módulos y sensores
 
-1. Consumo de energía: Alto vs. alternativas como ESP32.
+Puedes conectar fácilmente pantallas, motores, sensores, y más sin complicaciones.
 
-2. Limitación de RAM: 8 KB insuficiente para procesamiento de imágenes complejas .
+❌ 3 Desventajas del Arduino Uno
+Capacidad limitada de memoria y procesamiento
 
-3. Velocidad: Procesador de 16 MHz (lento para tareas avanzadas)
+Solo 32 KB de memoria flash y 2 KB de RAM, lo que restringe proyectos complejos.
 
-**sensor der color TCS3200**
+Sin conectividad inalámbrica integrada
 
-![sensor de color ](https://github.com/user-attachments/assets/ad0d0900-5da0-4351-b7b1-c4a1550e4126)
+No incluye Wi-Fi ni Bluetooth, lo que requiere módulos adicionales para conectividad.
 
-Ventajas:
+Tamaño relativamente grande
 
-1. Simpleza: Interfaz digital directa con microcontroladores 15.
+Puede ser incómodo para proyectos compactos o portátiles; hay placas más pequeñas como el Arduino Nano.
 
-2. Bajo costo: Ideal para proyectos educativos 11.
-
-3. Configurable: Filtros RGB seleccionables por software 15.
-
-Desventajas:
-
-1. Sin filtro IR: Sensible a interferencias lumínicas 11.
-
-2. Precisión limitada: Error del 0.2% a 50 kHz 15.
-
-3. Calibración manual: Requiere ajuste de umbrales para colores similares
 
 **Baterías De Litio 18650 3.7V a 7800mA**
 
