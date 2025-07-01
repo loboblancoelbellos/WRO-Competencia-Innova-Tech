@@ -1,7 +1,7 @@
 
 ## **Diagrama Electrico**
 
-![circuit_image](https://github.com/user-attachments/assets/2e3a6b02-0ed8-4931-bf9c-d51e61286a32)
+https://app.cirkitdesigner.com/project/7643c0ca-bc11-4855-be45-7017929e8db8
 
 
 
