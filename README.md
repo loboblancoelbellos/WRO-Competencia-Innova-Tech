@@ -97,8 +97,6 @@ Desventajas:
 ![Arduino1-3](https://github.com/user-attachments/assets/68743773-d612-4e50-b748-177711cdb51a)
 
 
-El Arduino Mega 2560 es una placa de desarrollo basada en el microcontrolador ATmega2560, diseñada para proyectos que requieren más pines de E/S y memoria que modelos como el Arduino Uno. Es ampliamente utilizado en robótica, automatización y sistemas de control complejos.
-
 ✅ 3 Ventajas del Arduino Uno
 Fácil de usar y aprender
 
