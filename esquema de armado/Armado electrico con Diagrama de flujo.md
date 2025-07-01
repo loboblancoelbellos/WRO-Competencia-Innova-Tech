@@ -1,8 +1,8 @@
 
 ## **Diagrama Electrico**
 
-https://app.cirkitdesigner.com/project/7643c0ca-bc11-4855-be45-7017929e8db8
 
+![circuit_image](https://github.com/user-attachments/assets/71839ff9-3e16-42c5-935b-3d21ed1a766c)
 
 
 ## Diagrama de Flujo del CircuitoEste documento presenta un diagrama de flujo que ilustra la lógica operativa de un circuito, basado en la imagen de referencia proporcionada.
